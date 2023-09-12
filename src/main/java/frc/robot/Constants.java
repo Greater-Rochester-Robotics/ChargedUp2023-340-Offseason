@@ -103,17 +103,18 @@ public class Constants {
     public static class WristConstants {}
     public static class IntakeConstants {}
 
-    /* IDENTIFICATION NUMBERS FOR DEVICES */
-    /* Rev Robotics SparkMAXs */
-    public static final int FRONT_LEFT_MOVE_MOTOR = 2;//drive module 0
-    public static final int FRONT_LEFT_ROTATE_MOTOR = 3;//drive module 0
+    public static class RobotMap {
+        /* Rev Robotics SparkMAXs */
+        public static final int FRONT_LEFT_MOVE_MOTOR = 2;//drive module 0
+        public static final int FRONT_LEFT_ROTATE_MOTOR = 3;//drive module 0
 
-    public static final int REAR_LEFT_MOVE_MOTOR = 4;//drive module 1
-    public static final int REAR_LEFT_ROTATE_MOTOR = 5;//drive module 1
+        public static final int REAR_LEFT_MOVE_MOTOR = 4;//drive module 1
+        public static final int REAR_LEFT_ROTATE_MOTOR = 5;//drive module 1
 
-    public static final int REAR_RIGHT_MOVE_MOTOR = 6;//drive module 2
-    public static final int REAR_RIGHT_ROTATE_MOTOR = 7;//drive module 2
-    
-    public static final int FRONT_RIGHT_MOVE_MOTOR = 8;//drive module 3
-    public static final int FRONT_RIGHT_ROTATE_MOTOR = 9;//drive module 3
+        public static final int REAR_RIGHT_MOVE_MOTOR = 6;//drive module 2
+        public static final int REAR_RIGHT_ROTATE_MOTOR = 7;//drive module 2
+        
+        public static final int FRONT_RIGHT_MOVE_MOTOR = 8;//drive module 3
+        public static final int FRONT_RIGHT_ROTATE_MOTOR = 9;//drive module 3
+    }
 }
