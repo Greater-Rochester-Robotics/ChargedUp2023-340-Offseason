@@ -6,8 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.subsystems.swervelib.SwervePIDFConfig;
-import frc.robot.subsystems.swervelib.rev.NEOConfig;
 
 /** Add your docs here. */
 public class Constants {
@@ -17,7 +15,7 @@ public class Constants {
     public static final double TWO_PI = 2*Math.PI;
     public static final Rotation2d ROTATE_BY_PI = Rotation2d.fromDegrees(180);//I only make this once
 
-    public static class SwerveDriveConstants {
+    public static class SwerveConstants {
         /* Swerve Module Positions */
         public static final Translation2d FRONT_LEFT_POSITION = new Translation2d(.3016,.3016);//These are in meters
         public static final Translation2d REAR_LEFT_POSITION = new Translation2d(-.3016,.3016);
@@ -99,21 +97,10 @@ public class Constants {
         public static final double DRIVE_BALANCE_ROBOT_ANGLE_TOLERANCE_AUTO = 13;
         public static final double DRIVE_BALANCE_ROBOT_MAX_SPEED = 0.11;
     }
+
     public static class ArmConstants {}
+
     public static class WristConstants {}
-    public static class IntakeConstants {}
-
-    /* IDENTIFICATION NUMBERS FOR DEVICES */
-    /* Rev Robotics SparkMAXs */
-    public static final int FRONT_LEFT_MOVE_MOTOR = 2;//drive module 0
-    public static final int FRONT_LEFT_ROTATE_MOTOR = 3;//drive module 0
-
-    public static final int REAR_LEFT_MOVE_MOTOR = 4;//drive module 1
-    public static final int REAR_LEFT_ROTATE_MOTOR = 5;//drive module 1
-
-    public static final int REAR_RIGHT_MOVE_MOTOR = 6;//drive module 2
-    public static final int REAR_RIGHT_ROTATE_MOTOR = 7;//drive module 2
     
-    public static final int FRONT_RIGHT_MOVE_MOTOR = 8;//drive module 3
-    public static final int FRONT_RIGHT_ROTATE_MOTOR = 9;//drive module 3
+    public static class IntakeConstants {}
 }
