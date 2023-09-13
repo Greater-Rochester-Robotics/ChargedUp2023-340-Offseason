@@ -122,6 +122,11 @@ public class Constants {
         public static final int INTAKE_UPPER_MOTOR = 5;
         public static final int INTAKE_LOWER_MOTOR = 6;
 
+        public static final int WRIST_MOTOR = 1;
+        
         public static final int INTAKE_CUBE_LIMIT_DIGITAL_INPUT = 0;
+
+        public static final int WRIST_INNER_LIMIT_SWITCH = 1;
+        public static final int WRIST_OUTER_LIMIT_SWITCH = 2;
     }
 }
