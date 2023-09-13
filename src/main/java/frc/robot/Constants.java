@@ -17,6 +17,8 @@ public class Constants {
     public static final double TWO_PI = 2*Math.PI;
     public static final Rotation2d ROTATE_BY_PI = Rotation2d.fromDegrees(180);//I only make this once
 
+    public static final double MAXIMUM_VOLTAGE = 12.0;
+
     public static class SwerveDriveConstants {
         /* Swerve Module Positions */
         public static final Translation2d FRONT_LEFT_POSITION = new Translation2d(.3016,.3016);//These are in meters
@@ -124,5 +126,14 @@ public class Constants {
         
         public static final int ARM_MOTOR = 10; 
 
+        public static final int INTAKE_UPPER_MOTOR = 5;
+        public static final int INTAKE_LOWER_MOTOR = 6;
+
+        public static final int WRIST_MOTOR = 1;
+        
+        public static final int INTAKE_CUBE_LIMIT_DIGITAL_INPUT = 0;
+
+        public static final int WRIST_INNER_LIMIT_SWITCH = 1;
+        public static final int WRIST_OUTER_LIMIT_SWITCH = 2;
     }
 }
