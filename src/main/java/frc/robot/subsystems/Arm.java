@@ -25,10 +25,31 @@ public class Arm extends SubsystemBase {
   
   /** Creates a new Arm. */
   public Arm() {
-
     armMotor = new CANSparkMax(Constants.RobotMap.ARM_MOTOR, MotorType.kBrushless);
     armEncoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
+    // TODO: put correct settings
+    // Arm motor settings.
+    armMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
+    armMotor.setInverted(true);
+    armMotor.setIdleMode(IdleMode.kBrake);
+    armMotor.setClosedLoopRampRate(1);
+
+    // Arm frame settings.
+    armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+    armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+    armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
+    armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 59467);
+    armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 59453);
+    armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 6);
+    armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 10);
+
+
+    // Arm encoder settings.
+    armEncoder.setPositionConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR);
+    armEncoder.setVelocityConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR / 60);
+    armEncoder.setInverted(true);
+    armEncoder.setZeroOffset(3.7332022 - Math.PI);
   }
 
   @Override
@@ -60,7 +81,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmSpeed(double speed){
-    //unfinished
+//unfinished
     
   }
 
