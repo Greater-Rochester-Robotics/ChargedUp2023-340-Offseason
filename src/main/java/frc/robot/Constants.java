@@ -99,7 +99,11 @@ public class Constants {
         public static final double DRIVE_BALANCE_ROBOT_ANGLE_TOLERANCE_AUTO = 13;
         public static final double DRIVE_BALANCE_ROBOT_MAX_SPEED = 0.11;
     }
-    public static class ArmConstants {}
+    public static class ArmConstants {
+
+        public static final double ARM_SPEED_UP = 0;
+        public static final double POSITION_TOLERANCE = 0;
+        public static final double ARM_SPEED_DOWN = 0;}
     public static class WristConstants {}
     public static class IntakeConstants {}
 
@@ -116,5 +120,9 @@ public class Constants {
         
         public static final int FRONT_RIGHT_MOVE_MOTOR = 8;//drive module 3
         public static final int FRONT_RIGHT_ROTATE_MOTOR = 9;//drive module 3
+
+        
+        public static final int ARM_MOTOR = 10; 
+
     }
 }
