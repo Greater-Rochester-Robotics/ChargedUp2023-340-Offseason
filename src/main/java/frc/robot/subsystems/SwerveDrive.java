@@ -88,18 +88,18 @@ public class SwerveDrive extends SubsystemBase {
     
     //Constructs all of the move motors
     swerveMoveNEO = new SwerveMoveNEO[]{
-      new SwerveMoveNEO(Constants.FRONT_LEFT_MOVE_MOTOR, Constants.SwerveDriveConstants.MOVE_CONFIG, Constants.SwerveDriveConstants.DRIVE_ENC_TO_METERS_FACTOR), 
-      new SwerveMoveNEO(Constants.REAR_LEFT_MOVE_MOTOR, Constants.SwerveDriveConstants.MOVE_CONFIG, Constants.SwerveDriveConstants.DRIVE_ENC_TO_METERS_FACTOR), 
-      new SwerveMoveNEO(Constants.REAR_RIGHT_MOVE_MOTOR, Constants.SwerveDriveConstants.MOVE_CONFIG, Constants.SwerveDriveConstants.DRIVE_ENC_TO_METERS_FACTOR), 
-      new SwerveMoveNEO(Constants.FRONT_RIGHT_MOVE_MOTOR, Constants.SwerveDriveConstants.MOVE_CONFIG, Constants.SwerveDriveConstants.DRIVE_ENC_TO_METERS_FACTOR )
+      new SwerveMoveNEO(Constants.RobotMap.FRONT_LEFT_MOVE_MOTOR, Constants.SwerveDriveConstants.MOVE_CONFIG, Constants.SwerveDriveConstants.DRIVE_ENC_TO_METERS_FACTOR), 
+      new SwerveMoveNEO(Constants.RobotMap.REAR_LEFT_MOVE_MOTOR, Constants.SwerveDriveConstants.MOVE_CONFIG, Constants.SwerveDriveConstants.DRIVE_ENC_TO_METERS_FACTOR), 
+      new SwerveMoveNEO(Constants.RobotMap.REAR_RIGHT_MOVE_MOTOR, Constants.SwerveDriveConstants.MOVE_CONFIG, Constants.SwerveDriveConstants.DRIVE_ENC_TO_METERS_FACTOR), 
+      new SwerveMoveNEO(Constants.RobotMap.FRONT_RIGHT_MOVE_MOTOR, Constants.SwerveDriveConstants.MOVE_CONFIG, Constants.SwerveDriveConstants.DRIVE_ENC_TO_METERS_FACTOR )
     };
 
     //Constructs all of the rotation motors
     swerveRotationNEO = new SwerveRotationNEO[]{
-      new SwerveRotationNEO(Constants.FRONT_LEFT_ROTATE_MOTOR, Constants.SwerveDriveConstants.ENC_TO_RAD_CONV_FACTOR, Constants.SwerveDriveConstants.ROTATE_CONFIG, Constants.TWO_PI),
-      new SwerveRotationNEO(Constants.REAR_LEFT_ROTATE_MOTOR, Constants.SwerveDriveConstants.ENC_TO_RAD_CONV_FACTOR, Constants.SwerveDriveConstants.ROTATE_CONFIG, Constants.TWO_PI),
-      new SwerveRotationNEO(Constants.REAR_RIGHT_ROTATE_MOTOR, Constants.SwerveDriveConstants.ENC_TO_RAD_CONV_FACTOR, Constants.SwerveDriveConstants.ROTATE_CONFIG, Constants.TWO_PI),
-      new SwerveRotationNEO(Constants.FRONT_RIGHT_ROTATE_MOTOR, Constants.SwerveDriveConstants.ENC_TO_RAD_CONV_FACTOR, Constants.SwerveDriveConstants.ROTATE_CONFIG, Constants.TWO_PI)
+      new SwerveRotationNEO(Constants.RobotMap.FRONT_LEFT_ROTATE_MOTOR, Constants.SwerveDriveConstants.ENC_TO_RAD_CONV_FACTOR, Constants.SwerveDriveConstants.ROTATE_CONFIG, Constants.TWO_PI),
+      new SwerveRotationNEO(Constants.RobotMap.REAR_LEFT_ROTATE_MOTOR, Constants.SwerveDriveConstants.ENC_TO_RAD_CONV_FACTOR, Constants.SwerveDriveConstants.ROTATE_CONFIG, Constants.TWO_PI),
+      new SwerveRotationNEO(Constants.RobotMap.REAR_RIGHT_ROTATE_MOTOR, Constants.SwerveDriveConstants.ENC_TO_RAD_CONV_FACTOR, Constants.SwerveDriveConstants.ROTATE_CONFIG, Constants.TWO_PI),
+      new SwerveRotationNEO(Constants.RobotMap.FRONT_RIGHT_ROTATE_MOTOR, Constants.SwerveDriveConstants.ENC_TO_RAD_CONV_FACTOR, Constants.SwerveDriveConstants.ROTATE_CONFIG, Constants.TWO_PI)
     };
 
     // Constructs the swerve modules 
