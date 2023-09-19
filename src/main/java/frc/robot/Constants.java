@@ -103,9 +103,19 @@ public class Constants {
     }
     public static class ArmConstants {
 
+        public static final double ABS_ENC_TO_RAD_CONVERSION_FACTOR = TWO_PI;
+
         public static final double ARM_SPEED_UP = 0;
-        public static final double POSITION_TOLERANCE = 0;
-        public static final double ARM_SPEED_DOWN = 0;}
+        public static final double ARM_SPEED_DOWN = 0;
+
+        public static double armControllerP = 0;
+        public static double armControllerI = 0;
+        public static double armControllerD = 0;
+        public static double armControllerFF = 0;
+
+        public static double armTolerance;
+
+    }
     public static class WristConstants {}
     public static class IntakeConstants {}
 

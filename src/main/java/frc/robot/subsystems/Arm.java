@@ -6,12 +6,17 @@ package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
 
@@ -19,9 +24,11 @@ public class Arm extends SubsystemBase {
   
   private AbsoluteEncoder armEncoder;
 
-  private double targetPosition;
+  private SparkMaxPIDController armController;
 
-  private boolean isGoingToPosition = false;
+  private boolean isMoving = false;
+
+  private double targetPosition = 0;
   
   /** Creates a new Arm. */
   public Arm() {
@@ -49,45 +56,52 @@ public class Arm extends SubsystemBase {
     armEncoder.setPositionConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR);
     armEncoder.setVelocityConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR / 60);
     armEncoder.setInverted(true);
-    armEncoder.setZeroOffset(3.7332022 - Math.PI);
+    //armEncoder.setZeroOffset(3.7332022);
+
+    armController.setP(ArmConstants.armControllerP);
+    armController.setI(ArmConstants.armControllerI);
+    armController.setD(ArmConstants.armControllerD);
+    armController.setFF(ArmConstants.armControllerFF);
+
   }
 
   @Override
   public void periodic() {
 
-    if(isGoingToPosition){
-
-      double currPosition = armEncoder.getPosition();
-
-      if(Math.abs(currPosition - targetPosition) < Constants.ArmConstants.POSITION_TOLERANCE){
-        //arm is within the set tolerance
-        isGoingToPosition = false;
-
-      } else if(currPosition < targetPosition){
-        //arm should lift up
-        setArmDutyCycle(Constants.ArmConstants.ARM_SPEED_UP);
-
-      } else {
-        //arm should go down
-        setArmDutyCycle(Constants.ArmConstants.ARM_SPEED_DOWN);
-      }
-
+    if (isMoving && Math.abs(armEncoder.getPosition() - targetPosition) < ArmConstants.armTolerance) {
+      isMoving = false;
+      armStop();
     }
 
   }
 
-  private void setArmDutyCycle(double speed){
-    armMotor.set(speed);
-  }
-
-  public void setArmSpeed(double speed){
-//unfinished
-    
+  public void setArmDutyCycle(double speed){
+    armController.setReference(speed, ControlType.kDutyCycle);
+    isMoving = true;
   }
 
   public void armToPosition(double position){
+    armController.setReference(position, ControlType.kPosition);
     targetPosition = position;
-    isGoingToPosition = true;
+    isMoving = true;
+  }
+
+  public void armStop(){
+    armController.setReference(0, ControlType.kDutyCycle);
+    isMoving = false;
+  }
+
+  public void armHoldPosition(){
+    armController.setReference(getPosition(), ControlType.kPosition);
+    isMoving = false;
+  }
+
+  public boolean isArmMoving(){
+    return isMoving;
+  }
+
+  public double getPosition() {
+    return armEncoder.getPosition();
   }
 
 }

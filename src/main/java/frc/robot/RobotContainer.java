@@ -21,9 +21,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-
-
-
+import frc.robot.commands.ArmHoldPosition;
 import frc.robot.commands.drive.DriveFieldRelative;
 import frc.robot.commands.drive.DriveLockWheels;
 import frc.robot.commands.drive.DriveRobotCentric;
@@ -38,8 +36,7 @@ import frc.robot.commands.drive.util.DriveResetGyroToZero;
 import frc.robot.commands.drive.util.DriveSetGyro;
 import frc.robot.commands.drive.util.DriveTuneDriveMotorFeedForward;
 import frc.robot.commands.drive.util.DriveTurnToAngleInRad;
-
-
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.SwerveDrive;
 
 /**
@@ -106,6 +103,7 @@ public class RobotContainer {
   //The robot's subsystems are instantiated here
 
   public static SwerveDrive swerveDrive;
+  public static Arm arm;
   
   //The sendable chooser for autonomous is constructed here
   public static SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -117,8 +115,10 @@ public class RobotContainer {
     //create(construct) subsystems
     
     swerveDrive = new SwerveDrive();
+    arm = new Arm();
     // swerveDrive.setDefaultCommand(new DriveFieldRelativeAdvanced(false));
     
+    arm.setDefaultCommand(new ArmHoldPosition());
 
     //Add all autos to the auto selector
     configureAutoModes();
