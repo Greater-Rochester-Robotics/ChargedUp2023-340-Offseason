@@ -94,7 +94,9 @@ public class Arm extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+
+  }
 
   // arm methods
 
@@ -131,7 +133,7 @@ public class Arm extends SubsystemBase {
 
 
   public void wristToPosition(double position){
-    wristController.setReference(position, ControlType.kPosition);
+    wristController.setReference(targetWristPosition-getArmPosition(), ControlType.kPosition);
     targetWristPosition = position;
   }
 
@@ -144,7 +146,7 @@ public class Arm extends SubsystemBase {
   } 
 
   public double getWristPosition() {
-    return wristEncoder.getPosition();
+    return wristEncoder.getPosition()-getArmPosition();
   }
 
   public boolean hasWristReachedPosition(){
