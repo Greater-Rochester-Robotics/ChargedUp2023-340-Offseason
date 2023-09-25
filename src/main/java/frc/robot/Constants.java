@@ -115,6 +115,8 @@ public class Constants {
 
         public static double armTolerance;
 
+        public static double wristTolerance;
+
     }
     public static class WristConstants {}
     public static class IntakeConstants {}
