@@ -96,6 +96,18 @@ public class Arm extends SubsystemBase {
     isMoving = false;
   }
 
+  public void wristToPosition(){
+
+  }
+
+  public void setWristDutyCycle(){
+
+  }
+
+  public void armWristToPosition(){
+
+  }
+
   public boolean isArmMoving(){
     return isMoving;
   }
