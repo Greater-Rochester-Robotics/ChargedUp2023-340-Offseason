@@ -17,7 +17,7 @@ public class WristHoldPosition extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.arm.WristHoldPosition(); //TODO: make WristHoldPosition in Arm
+    RobotContainer.arm.wristHoldPosition(); //TODO: make WristHoldPosition in Arm
   }
 
   // Called every time the scheduler runs while the command is scheduled.

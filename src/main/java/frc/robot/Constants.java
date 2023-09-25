@@ -108,6 +108,9 @@ public class Constants {
         public static final double ARM_SPEED_UP = 0;
         public static final double ARM_SPEED_DOWN = 0;
 
+        public static final double WRIST_SPEED_UP = 0;
+        public static final double WRIST_SPEED_DOWN = 0;
+
         public static double armControllerP = 0;
         public static double armControllerI = 0;
         public static double armControllerD = 0;

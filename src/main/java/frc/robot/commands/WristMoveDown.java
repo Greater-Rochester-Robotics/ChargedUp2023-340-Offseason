@@ -27,7 +27,7 @@ public class WristMoveDown extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.arm.WristStop(); //make wristStop
+    RobotContainer.arm.wristStop(); //make wristStop
   }
 
   // Returns true when the command should end.

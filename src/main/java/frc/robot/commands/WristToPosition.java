@@ -21,7 +21,7 @@ public class WristToPosition extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.arm.wristToPosition();
+    RobotContainer.arm.wristToPosition(position);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
