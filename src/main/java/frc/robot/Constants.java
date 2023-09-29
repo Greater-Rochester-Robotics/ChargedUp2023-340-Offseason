@@ -150,5 +150,11 @@ public class Constants {
 
         public static final int WRIST_INNER_LIMIT_SWITCH = 1;
         public static final int WRIST_OUTER_LIMIT_SWITCH = 2;
+
+        /* ctre */
+        public static final int FRONT_LEFT_CAN_CODER = 3;
+        public static final int REAR_LEFT_CAN_CODER = 5;
+        public static final int REAR_RIGHT_CAN_CODER = 7;
+        public static final int FRONT_RIGHT_CAN_CODER = 9;
     }
 }

@@ -28,26 +28,28 @@ public class Intake extends SubsystemBase {
     upperMotor.setIdleMode(IdleMode.kBrake);
     upperMotor.setClosedLoopRampRate(1);
 
-    upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+    upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
     upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
     upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
     upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 59467);
     upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 59453);
-    upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 6);
-    upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 10);
+    upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 59424);
+    upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50952);
 
     lowerMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
-    lowerMotor.setInverted(true);
+    //lowerMotor.setInverted(true);
     lowerMotor.setIdleMode(IdleMode.kBrake);
     lowerMotor.setClosedLoopRampRate(1);
     
-    lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+    lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 59467);
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 59453);
-    lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 6);
-    lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 10);
+    lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 59424);
+    lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50952);
+
+    lowerMotor.follow(upperMotor, true);
 
     cubeLimit = new DigitalInput(Constants.RobotMap.INTAKE_CUBE_LIMIT_DIGITAL_INPUT);
   }
@@ -56,4 +58,13 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  public void setIntakeDutyCycle(double speed){
+    upperMotor.set(speed);
+  }
+
+  public boolean getCubeLimit(){
+    return cubeLimit.get();
+  }
+
 }

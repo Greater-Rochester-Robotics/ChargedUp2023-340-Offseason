@@ -27,6 +27,8 @@ public class Arm extends SubsystemBase {
 
   private double targetArmPosition = 0;
   private double targetWristPosition = 0;
+  private boolean isArmClosedLoop = false;
+  private boolean isWristClosedLoop = false;
 
   private CANSparkMax wristMotor;
   private AbsoluteEncoder wristEncoder;
@@ -95,26 +97,35 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+    if(isArmClosedLoop){
+      armController.setReference(targetArmPosition, ControlType.kPosition,0,armFeedForward());
+    }
+
+    if(isWristClosedLoop){
+      wristController.setReference(targetWristPosition, ControlType.kPosition,0,wristFeedForward());
+    }
   }
 
   // arm methods
 
   public void setArmDutyCycle(double speed){
     armController.setReference(speed, ControlType.kDutyCycle);
+    isArmClosedLoop = false;
   }
 
   public void armToPosition(double position){
-    armController.setReference(position, ControlType.kPosition);
     targetArmPosition = position;
+    isArmClosedLoop = true;
   }
 
   public void armStop(){
     armController.setReference(0, ControlType.kDutyCycle);
+    isArmClosedLoop = false;
   }
 
   public void armHoldPosition(){
-    armController.setReference(getArmPosition(), ControlType.kPosition);
+    targetArmPosition = getArmPosition();
+    isArmClosedLoop = true;
   }
 
   public double getArmPosition() {
@@ -125,26 +136,28 @@ public class Arm extends SubsystemBase {
     return Math.abs(armEncoder.getPosition() - targetArmPosition) < ArmConstants.armTolerance;
   }
 
+  public double armFeedForward(){
+    return 0.0;
+  }
+
   // wrist methods
 
   public void setWristDutyCycle(double speed){
     wristController.setReference(speed, ControlType.kDutyCycle);
+    isWristClosedLoop = false;
   }
 
 
   public void wristToPosition(double position){
     wristController.setReference(targetWristPosition-getArmPosition(), ControlType.kPosition);
     targetWristPosition = position;
+    isWristClosedLoop = true;
   }
 
   public void wristStop(){
     wristController.setReference(0, ControlType.kDutyCycle);
+    isWristClosedLoop = false;
   }
-
-  public void wristHoldPosition(){
-    targetWristPosition = getWristPosition();
-    wristController.setReference(targetWristPosition, ControlType.kPosition);
-  } 
 
   public double getWristPosition() {
     return wristEncoder.getPosition()-getArmPosition();
@@ -160,6 +173,10 @@ public class Arm extends SubsystemBase {
 
   public boolean getOuterWistLimitSwitch(){
     return wristOuterLimitSwitch.get();
+  }
+
+  public double wristFeedForward(){
+    return 0.0;
   }
 
   // arm wrist methods

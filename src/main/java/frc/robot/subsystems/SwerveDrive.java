@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.ADIS16470_IMU.IMUAxis;
 import frc.robot.subsystems.swervelib.SwerveModule;
+import frc.robot.subsystems.swervelib.ctre.SwerveAbsoluteCANCoder;
 import frc.robot.subsystems.swervelib.rev.SwerveMoveNEO;
 import frc.robot.subsystems.swervelib.rev.SwerveRotationNEO;
 
@@ -40,6 +41,7 @@ public class SwerveDrive extends SubsystemBase {
   /** Motors */
   private static SwerveMoveNEO swerveMoveNEO[];
   private static SwerveRotationNEO swerveRotationNEO[];
+  private static SwerveAbsoluteCANCoder swerveRotationEncoder[];
   private static SwerveModule swerveModules[];
   private static SwerveModule frontLeft, rearLeft, rearRight, frontRight;
 
@@ -102,11 +104,18 @@ public class SwerveDrive extends SubsystemBase {
       new SwerveRotationNEO(Constants.RobotMap.FRONT_RIGHT_ROTATE_MOTOR, Constants.SwerveDriveConstants.ENC_TO_RAD_CONV_FACTOR, Constants.SwerveDriveConstants.ROTATE_CONFIG, Constants.TWO_PI)
     };
 
+    swerveRotationEncoder = new SwerveAbsoluteCANCoder[]{
+      new SwerveAbsoluteCANCoder(Constants.RobotMap.FRONT_LEFT_CAN_CODER, false),
+      new SwerveAbsoluteCANCoder(Constants.RobotMap.REAR_LEFT_CAN_CODER, false),
+      new SwerveAbsoluteCANCoder(Constants.RobotMap.REAR_RIGHT_CAN_CODER, false),
+      new SwerveAbsoluteCANCoder(Constants.RobotMap.FRONT_RIGHT_CAN_CODER, false)
+    };
+
     // Constructs the swerve modules 
-    frontLeft = new SwerveModule(swerveMoveNEO[0], swerveRotationNEO[0]);
-    rearLeft = new SwerveModule(swerveMoveNEO[1], swerveRotationNEO[1]);
-    rearRight = new SwerveModule(swerveMoveNEO[2], swerveRotationNEO[2]);
-    frontRight = new SwerveModule(swerveMoveNEO[3], swerveRotationNEO[3]);
+    frontLeft = new SwerveModule(swerveMoveNEO[0], swerveRotationNEO[0], swerveRotationEncoder[0]);
+    rearLeft = new SwerveModule(swerveMoveNEO[1], swerveRotationNEO[1], swerveRotationEncoder[1]);
+    rearRight = new SwerveModule(swerveMoveNEO[2], swerveRotationNEO[2], swerveRotationEncoder[2]);
+    frontRight = new SwerveModule(swerveMoveNEO[3], swerveRotationNEO[3], swerveRotationEncoder[3]);
     
      //This may seem repetitive, but it makes clear which module is which.
     swerveModules = new SwerveModule[]{
