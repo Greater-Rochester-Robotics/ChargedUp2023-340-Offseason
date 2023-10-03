@@ -10,8 +10,13 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   private CANSparkMax upperMotor;
@@ -65,6 +70,14 @@ public class Intake extends SubsystemBase {
 
   public boolean getCubeLimit(){
     return cubeLimit.get();
+  }
+
+  public Command getIntakeStopCommand(){
+    return new InstantCommand(()->setIntakeDutyCycle(0.0),this);
+  }
+
+  public Command getIntakeCubeCommand(){
+    return new FunctionalCommand(()->setIntakeDutyCycle(IntakeConstants.INTAKE_SPEED), null, (interrupt)->setIntakeDutyCycle(0.0), this::getCubeLimit, this);
   }
 
 }

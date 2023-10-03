@@ -122,7 +122,10 @@ public class Constants {
 
     }
     public static class WristConstants {}
-    public static class IntakeConstants {}
+    public static class IntakeConstants {
+
+        public static final double INTAKE_SPEED = 0;
+    }
 
     public static class RobotMap {
         /* Rev Robotics SparkMAXs */
