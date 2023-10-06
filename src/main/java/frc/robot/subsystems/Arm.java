@@ -14,12 +14,15 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
+
+  private byte smartDashboardDelay = 0;
 
   private CANSparkMax armMotor;
   private AbsoluteEncoder armEncoder;
@@ -104,6 +107,14 @@ public class Arm extends SubsystemBase {
     if(isWristClosedLoop){
       wristController.setReference(targetWristPosition, ControlType.kPosition,0,wristFeedForward());
     }
+    
+    smartDashboardDelay++;
+    if(smartDashboardDelay >= 50){
+      SmartDashboard.putNumber("armEncoder", armEncoder.getPosition());
+      SmartDashboard.putNumber("wristEncoder", wristEncoder.getPosition());
+      smartDashboardDelay = 0;
+    }
+
   }
 
   // arm methods

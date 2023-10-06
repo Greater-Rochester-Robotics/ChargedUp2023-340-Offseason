@@ -20,17 +20,18 @@ public class Constants {
     public static final double MAXIMUM_VOLTAGE = 12.0;
 
     public static class SwerveDriveConstants {
-        /* Swerve Module Positions */
-        public static final Translation2d FRONT_LEFT_POSITION = new Translation2d(.3016,.3016);//These are in meters
-        public static final Translation2d REAR_LEFT_POSITION = new Translation2d(-.3016,.3016);
-        public static final Translation2d REAR_RIGHT_POSITION = new Translation2d(-.3016,-.3016);
-        public static final Translation2d FRONT_RIGHT_POSITION = new Translation2d(.3016,-.3016); 
+        /* Swerve Module Positions */ //TODO double check
+        public static final Translation2d FRONT_LEFT_POSITION = new Translation2d(0.219075,0.219075);//These are in meters
+        public static final Translation2d REAR_LEFT_POSITION = new Translation2d(-0.219075,0.219075);
+        public static final Translation2d REAR_RIGHT_POSITION = new Translation2d(-0.219075,-0.219075);
+        public static final Translation2d FRONT_RIGHT_POSITION = new Translation2d(0.219075,-0.219075); 
 
         /* Swerve Module Drive Motor Constants */
-        public static final double DRIVE_ENC_TO_METERS_FACTOR = 0.319186/7.13;//7.13:1//the ratio from mechanical specs
+                //This is the conversion from one full rotation of the motor to the distance that the robot travels     7.13:1//the ratio from mechanical specs
+        public static final double DRIVE_ENC_TO_METERS_FACTOR = 0.012  * Math.PI / 6.54; //Colsen wheel .012 meters diameter 6.54:1 ratio
         public static final double MINIMUM_DRIVE_SPEED = 0.01;// the slowest the wheels can turn, in m/s
         public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.05;// the slowest the wheels can turn, in duty cycle
-        public static final double MOTOR_MAXIMUM_VELOCITY = 4.62;//4.33 5.19
+        public static final double MOTOR_MAXIMUM_VELOCITY = 4.78536;//4.33 5.19
         public static final double PATH_MAXIMUM_VELOCITY = 3.5;
         public static final double MAXIMUM_ACCELERATION = 1.25;
         public static final double MAX_ROBOT_ROT_VELOCITY = 2;
@@ -46,7 +47,7 @@ public class Constants {
 
 
         /* Swerve Module Rotation constants */
-        public static final double ENC_TO_RAD_CONV_FACTOR = TWO_PI / 13.71; // 13.71:1 //TODO: get the right number
+        public static final double ENC_TO_RAD_CONV_FACTOR = TWO_PI / 13.71;
         public static final double SWERVE_ROT_P_VALUE = 0.5;//.1;
         public static final double SWERVE_ROT_I_VALUE = 0.0;
         public static final double SWERVE_ROT_D_VALUE = 0.1; 
@@ -54,9 +55,6 @@ public class Constants {
         public static final double SWERVE_ROT_FF_VALUE = 0.0;
         public static final SwervePIDFConfig ROTATE_PIDF = new SwervePIDFConfig(SWERVE_ROT_P_VALUE, SWERVE_ROT_I_VALUE, SWERVE_ROT_D_VALUE, SWERVE_ROT_FF_VALUE);
         public static final NEOConfig ROTATE_CONFIG = new NEOConfig(ROTATE_PIDF, true, false, MAXIMUM_VOLTAGE);
-        // public static final double SWERVE_ROT_ARB_FF_VOLTAGE = 0.0;//This is left over from NEO550 consider deleting
-        // public static final double SWERVE_ROT_PID_VOLTAGE_MINIMUM = -12.0;//This is left over from NEO550 consider deleting
-        // public static final double SWERVE_ROT_PID_VOLTAGE_MAXIMUM = 12.0;//This is left over from NEO550 consider deleting
         public static final double SWERVE_MODULE_TOLERANCE = 0.1;
         public static final double ROTATIONAL_VELOCITY_TOLERANCE = 1.0;
 
@@ -101,6 +99,7 @@ public class Constants {
         public static final double DRIVE_BALANCE_ROBOT_ANGLE_TOLERANCE_AUTO = 13;
         public static final double DRIVE_BALANCE_ROBOT_MAX_SPEED = 0.11;
     }
+
     public static class ArmConstants {
 
         public static final double ABS_ENC_TO_RAD_CONVERSION_FACTOR = TWO_PI;
@@ -120,6 +119,11 @@ public class Constants {
 
         public static double wristTolerance;
 
+        public static double INTAKE_ARM_POSITION = 0;
+        public static double INTAKE_WIRIST_POSITON = 0;
+
+        public static double SAFE_ARM_POSITION = 0;
+        public static double SAFE_WRIST_POSITION = 0;
     }
     public static class WristConstants {}
     public static class IntakeConstants {

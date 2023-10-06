@@ -104,6 +104,7 @@ public class RobotContainer {
 
   public static SwerveDrive swerveDrive;
   public static Arm arm;
+  public static Intake intake;
   
   //The sendable chooser for autonomous is constructed here
   public static SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -116,6 +117,7 @@ public class RobotContainer {
     
     swerveDrive = new SwerveDrive();
     arm = new Arm();
+    intake = new Intake();
     // swerveDrive.setDefaultCommand(new DriveFieldRelativeAdvanced(false));
     
     arm.setDefaultCommand(new ArmHoldPosition());

@@ -4,12 +4,15 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -17,8 +20,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.CommandBuilder;
 
 public class Intake extends SubsystemBase {
+  private byte smartDashboardDelay = 0;
+
   private CANSparkMax upperMotor;
   private CANSparkMax lowerMotor;
   private DigitalInput cubeLimit;
@@ -62,6 +68,11 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    smartDashboardDelay++;
+    if(smartDashboardDelay >= 50){
+       SmartDashboard.putBoolean("cube limit switch", getCubeLimit());
+       smartDashboardDelay = 0;
+    }
   }
 
   public void setIntakeDutyCycle(double speed){
@@ -72,12 +83,26 @@ public class Intake extends SubsystemBase {
     return cubeLimit.get();
   }
 
+    //----------Commands----------
+
   public Command getIntakeStopCommand(){
     return new InstantCommand(()->setIntakeDutyCycle(0.0),this);
   }
 
   public Command getIntakeCubeCommand(){
-    return new FunctionalCommand(()->setIntakeDutyCycle(IntakeConstants.INTAKE_SPEED), null, (interrupt)->setIntakeDutyCycle(0.0), this::getCubeLimit, this);
+    return new CommandBuilder(this)
+      .onInitialize(()->setIntakeDutyCycle(IntakeConstants.INTAKE_SPEED))
+      .onEnd(()->setIntakeDutyCycle(0.0))
+      .isFinished(this::getCubeLimit);
   }
 
+  public Command getIntakeSpitCommand(double speed){
+    return this.getIntakeSpitCommand(()->speed);
+  }
+
+  public Command getIntakeSpitCommand(DoubleSupplier speed){
+    return new CommandBuilder(this)
+      .onExecute(()->setIntakeDutyCycle(speed.getAsDouble()))
+      .onEnd(()->setIntakeDutyCycle(0.0));
+  }
 }
