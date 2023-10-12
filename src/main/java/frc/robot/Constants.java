@@ -125,10 +125,9 @@ public class Constants {
         public static double SAFE_ARM_POSITION = 0;
         public static double SAFE_WRIST_POSITION = 0;
     }
-    public static class WristConstants {}
     public static class IntakeConstants {
 
-        public static final double INTAKE_SPEED = 0;
+        public static final double INTAKE_SPEED = .25;
     }
 
     public static class RobotMap {
@@ -145,18 +144,17 @@ public class Constants {
         public static final int FRONT_RIGHT_MOVE_MOTOR = 8;//drive module 3
         public static final int FRONT_RIGHT_ROTATE_MOTOR = 9;//drive module 3
 
-        
         public static final int ARM_MOTOR = 10; 
 
-        public static final int INTAKE_UPPER_MOTOR = 5;
-        public static final int INTAKE_LOWER_MOTOR = 6;
-
         public static final int WRIST_MOTOR = 1;
-        
-        public static final int INTAKE_CUBE_LIMIT_DIGITAL_INPUT = 0;
 
         public static final int WRIST_INNER_LIMIT_SWITCH = 1;
         public static final int WRIST_OUTER_LIMIT_SWITCH = 2;
+
+        public static final int INTAKE_UPPER_MOTOR = 20;
+        public static final int INTAKE_LOWER_MOTOR = 21;
+        
+        public static final int INTAKE_CUBE_LIMIT_DIGITAL_INPUT = 0;
 
         /* ctre */
         public static final int FRONT_LEFT_CAN_CODER = 3;

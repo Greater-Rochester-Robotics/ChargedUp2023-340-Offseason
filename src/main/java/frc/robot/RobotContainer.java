@@ -37,6 +37,7 @@ import frc.robot.commands.drive.util.DriveSetGyro;
 import frc.robot.commands.drive.util.DriveTuneDriveMotorFeedForward;
 import frc.robot.commands.drive.util.DriveTurnToAngleInRad;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
 
 /**
@@ -156,6 +157,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* ==================== DRIVER BUTTONS ==================== */
+    driverA.whileTrue(intake.getIntakeCubeCommand());
+
     driverLB.whenActive(new DriveResetGyroToZero());
     // driverRB.whileActiveContinuous(new DriveOnTarget(0));
     driverBack.or(driverStart).toggleWhenActive(new DriveRobotCentric(false)); 

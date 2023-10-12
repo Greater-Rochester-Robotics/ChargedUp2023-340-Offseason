@@ -48,7 +48,7 @@ public class Intake extends SubsystemBase {
     upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50952);
 
     lowerMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
-    //lowerMotor.setInverted(true);
+    lowerMotor.setInverted(true);
     lowerMotor.setIdleMode(IdleMode.kBrake);
     lowerMotor.setClosedLoopRampRate(1);
     
@@ -60,7 +60,7 @@ public class Intake extends SubsystemBase {
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 59424);
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50952);
 
-    lowerMotor.follow(upperMotor, true);
+    lowerMotor.follow(upperMotor);
 
     cubeLimit = new DigitalInput(Constants.RobotMap.INTAKE_CUBE_LIMIT_DIGITAL_INPUT);
   }
