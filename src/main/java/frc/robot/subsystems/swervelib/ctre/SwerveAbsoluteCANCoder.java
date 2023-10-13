@@ -4,18 +4,23 @@
 
 package frc.robot.subsystems.swervelib.ctre;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderStatusFrame;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Preferences;
 import frc.robot.subsystems.swervelib.interfaces.SwerveAbsoluteSensor;
 
 /** 
  * This class is the way to create a CANCoder object for use in the SwerveModule
  */
 public class SwerveAbsoluteCANCoder implements SwerveAbsoluteSensor{
-    CANCoder rotateAbsSensor;
+    private final CANcoder rotateAbsSensor;
+    private final StatusSignal<Double> absPositionSignal;
+    private final StatusSignal<Double> velocitySignal;
 
     /**
      * 
@@ -32,19 +37,25 @@ public class SwerveAbsoluteCANCoder implements SwerveAbsoluteSensor{
      */
     public SwerveAbsoluteCANCoder(int canCoderID, boolean isInverted){
         //the following sensor is angle of the module, as an absolute value
-        rotateAbsSensor = new CANCoder(canCoderID);
+        rotateAbsSensor = new CANcoder(canCoderID);
+
+        CANcoderConfiguration config = new CANcoderConfiguration();
 
         //If the CANCoder is underneath the module, LED toward the floor, it must be inverted
-        rotateAbsSensor.configSensorDirection(isInverted);
+        config.MagnetSensor.SensorDirection = isInverted ? SensorDirectionValue.Clockwise_Positive : SensorDirectionValue.CounterClockwise_Positive;
 
         //configure the cancoder to read values between -180 to 180
-        rotateAbsSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
 
         //The following reduces the CAN packets to a reasonable rate:
         //The following data packet has the default of 10, but 20 makes sense since the robot code loops at 20
-        rotateAbsSensor.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 20);
-        //the following data packet is not needed in swerve
-        rotateAbsSensor.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 255);
+        absPositionSignal = rotateAbsSensor.getAbsolutePosition();
+        absPositionSignal.setUpdateFrequency(20);
+
+        velocitySignal = rotateAbsSensor.getVelocity();
+        velocitySignal.setUpdateFrequency(20);
+
+        rotateAbsSensor.getConfigurator().apply(config);
     }
     
 
@@ -57,7 +68,7 @@ public class SwerveAbsoluteCANCoder implements SwerveAbsoluteSensor{
      * @param value a number between -180 and 180, where 0 is straight ahead
      */
     private void setRotateAbsSensor(double value) {
-        rotateAbsSensor.configMagnetOffset(value, 0);
+        rotateAbsSensor.setPosition(value);
     }
 
     /**
@@ -68,7 +79,9 @@ public class SwerveAbsoluteCANCoder implements SwerveAbsoluteSensor{
      */
     @Override
     public void zeroAbsPositionSensor() {
-        setRotateAbsSensor(this.rotateAbsSensor.configGetMagnetOffset()-getAbsPosInDeg());
+        double offset = Preferences.getDouble("CANCoder" + rotateAbsSensor.getDeviceID(), 0.0)-getAbsPosInDeg();
+        setRotateAbsSensor(offset);
+        Preferences.setDouble("CANCoder" + rotateAbsSensor.getDeviceID(), offset);
     }
 
     /**
@@ -81,7 +94,7 @@ public class SwerveAbsoluteCANCoder implements SwerveAbsoluteSensor{
     @Override
     public double getAbsPosInDeg() {
         //The CANCOder reads values in degrees
-        return rotateAbsSensor.getAbsolutePosition();
+        return absPositionSignal.getValue();
     }
 
     /**
@@ -114,6 +127,6 @@ public class SwerveAbsoluteCANCoder implements SwerveAbsoluteSensor{
      * @return double speed of module in radians per second
      */
     public double getSpeedInRad(){
-        return Math.toRadians(rotateAbsSensor.getVelocity());
+        return Math.toRadians(velocitySignal.getValue());
     }
 }

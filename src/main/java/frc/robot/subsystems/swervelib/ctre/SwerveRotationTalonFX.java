@@ -4,15 +4,22 @@
 
 package frc.robot.subsystems.swervelib.ctre;
 
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.subsystems.swervelib.interfaces.SwerveRotationMotor;
 
 /** Add your docs here. */
 public class SwerveRotationTalonFX implements SwerveRotationMotor {
     private TalonFX rotationMotor;
+    private final StatusSignal<Double> positionSignal;
+    private final StatusSignal<Double> velocitySignal;
     private final double ENC_TO_RADS_CONV_FACTOR;
     
     public SwerveRotationTalonFX(int rotationMotorID) {
@@ -25,42 +32,51 @@ public class SwerveRotationTalonFX implements SwerveRotationMotor {
 
     public SwerveRotationTalonFX(int rotationMotorID, TalonFXConfiguration config, double encToRadConvFactor) {
         rotationMotor = new TalonFX(rotationMotorID);
-        rotationMotor.configAllSettings(config);
-        rotationMotor.configSelectedFeedbackCoefficient(encToRadConvFactor);
+        rotationMotor.getConfigurator().apply(config);
         ENC_TO_RADS_CONV_FACTOR = encToRadConvFactor;
+
+        positionSignal = rotationMotor.getPosition();
+        positionSignal.setUpdateFrequency(20);
+
+        velocitySignal = rotationMotor.getVelocity();
+        velocitySignal.setUpdateFrequency(20);
     }
 
     @Override
     public void setRotationMotorPIDF(double P, double I, double D, double F) {
-        rotationMotor.config_kP(0, P);
-        rotationMotor.config_kD(0, D);
-        rotationMotor.config_kI(0, I);
-        rotationMotor.config_kF(0, F);
+        Slot0Configs config = new Slot0Configs();
+        config.kP = P;
+        config.kI = I;
+        config.kD = D;
+        config.kS = 0;
+        config.kV = 0;
+        rotationMotor.getConfigurator().apply(config);
     }
 
     @Override
     public double getRelEncCount() {
-        return rotationMotor.getSelectedSensorPosition()*ENC_TO_RADS_CONV_FACTOR;
+        return positionSignal.getValue()*ENC_TO_RADS_CONV_FACTOR;
     }
 
     @Override
     public double getRelEncSpeed() {
-        return rotationMotor.getSelectedSensorVelocity()*ENC_TO_RADS_CONV_FACTOR*10;
+        return velocitySignal.getValue()*ENC_TO_RADS_CONV_FACTOR*10;
     }
 
     @Override
     public void driveRotateMotor(double dutyCycle) {
-        rotationMotor.set(TalonFXControlMode.PercentOutput, dutyCycle);
+        rotationMotor.set(dutyCycle);
     }
 
     @Override
     public void setRotationMotorPosition(double output) {
-        rotationMotor.set(TalonFXControlMode.Position, output/ENC_TO_RADS_CONV_FACTOR/10);
+        PositionVoltage request = new PositionVoltage(output /ENC_TO_RADS_CONV_FACTOR/10).withSlot(0);
+        rotationMotor.setControl(request);
     }
 
     @Override
     public void stopRotation() {
-        rotationMotor.set(TalonFXControlMode.PercentOutput, 0.0);
+        rotationMotor.set(0.0);
     }
     
 }

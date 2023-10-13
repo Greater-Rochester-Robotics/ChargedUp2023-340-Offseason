@@ -4,18 +4,24 @@
 
 package frc.robot.subsystems.swervelib.ctre;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.swervelib.interfaces.SwerveMoveMotor;
 
 /** Add your docs here. */
 public class SwerveMoveTalonFX implements SwerveMoveMotor {
     private TalonFX driveMotor;
     private final double ENC_TO_METERS_CONV_FACTOR;
+    private final StatusSignal<Double> positionSignal;
+    private final StatusSignal<Double> velocitySignal;
+
     public SwerveMoveTalonFX(int driveMotorID) {
         this(driveMotorID, new TalonFXConfiguration());
     }
@@ -26,17 +32,25 @@ public class SwerveMoveTalonFX implements SwerveMoveMotor {
 
     public SwerveMoveTalonFX(int driveMotorID, TalonFXConfiguration config, double encToMetersConvFactor) {
         driveMotor = new TalonFX(driveMotorID);
-        driveMotor.configAllSettings(config);
-        driveMotor.configSelectedFeedbackCoefficient(encToMetersConvFactor);
+        config.CurrentLimits.SupplyCurrentLimit = Constants.MAXIMUM_VOLTAGE;
+        driveMotor.getConfigurator().apply(config);
+
         ENC_TO_METERS_CONV_FACTOR = encToMetersConvFactor;
+
+        positionSignal = driveMotor.getPosition();
+        positionSignal.setUpdateFrequency(20);
+
+        velocitySignal = driveMotor.getVelocity();
+        velocitySignal.setUpdateFrequency(20);
     }
     
     public void setDriveDutyCycle(double dutyCycle){
-        driveMotor.set(ControlMode.PercentOutput, dutyCycle);
+        driveMotor.set(dutyCycle);
     }
 
     public void setDriveSpeed(double speed){
-        driveMotor.set(ControlMode.Velocity, speed/ENC_TO_METERS_CONV_FACTOR/10);
+        VelocityVoltage request = new VelocityVoltage(speed /ENC_TO_METERS_CONV_FACTOR/10).withSlot(0);
+        driveMotor.setControl(request);
     }
 
     /**
@@ -44,11 +58,13 @@ public class SwerveMoveTalonFX implements SwerveMoveMotor {
      * @param brakeOn
      */
     public void setDriveMotorBrake(boolean brakeOn){
-        driveMotor.setNeutralMode(brakeOn ? NeutralMode.Brake : NeutralMode.Coast);
+        MotorOutputConfigs config = new MotorOutputConfigs();
+        config.NeutralMode = brakeOn ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+        driveMotor.getConfigurator().apply(config);
     }
 
     public double getDriveDistance(){
-        return driveMotor.getSelectedSensorPosition()*ENC_TO_METERS_CONV_FACTOR;
+        return positionSignal.getValue()*ENC_TO_METERS_CONV_FACTOR;
     }
 
     /**
@@ -56,7 +72,7 @@ public class SwerveMoveTalonFX implements SwerveMoveMotor {
      * essentially resetting it. 
      */
     public void resetDriveMotorEncoder(){
-        driveMotor.setSelectedSensorPosition(0.0);
+        driveMotor.setRotorPosition(0.0);
     }
 
     /**
@@ -65,7 +81,7 @@ public class SwerveMoveTalonFX implements SwerveMoveMotor {
      * @return speed of the drive wheel
      */
     public double getDriveVelocity(){
-        return driveMotor.getSelectedSensorVelocity()*ENC_TO_METERS_CONV_FACTOR*10;
+        return positionSignal.getValue()*ENC_TO_METERS_CONV_FACTOR*10;
     }
 
     /**
@@ -77,18 +93,18 @@ public class SwerveMoveTalonFX implements SwerveMoveMotor {
      * @param F value of the F constant
      */
     public void setDriveMotorPIDF(double P, double I, double D, double F){
-        driveMotor.config_kP(0, P);
-        driveMotor.config_kD(0, D);
-        driveMotor.config_kI(0, I);
-        driveMotor.config_kF(0, F);
-    }
-
-    public void enableVoltageCompensation(double maximumVoltage){
-        driveMotor.configVoltageCompSaturation(maximumVoltage);
+        Slot0Configs config = new Slot0Configs();
+        config.kP = P;
+        config.kI = I;
+        config.kD = D;
+        config.kS = 0;
+        config.kV = 0;
+        driveMotor.getConfigurator().apply(config);
     }
 
     public void stopMotor(){
-        driveMotor.set(TalonFXControlMode.PercentOutput, 0.0);
+        driveMotor.set(0.0);
     }
 
+    public void enableVoltageCompensation(double a) {}
 }
