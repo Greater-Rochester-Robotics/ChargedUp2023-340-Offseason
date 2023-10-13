@@ -15,10 +15,12 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.commands.CommandBuilder;
 
 public class Arm extends SubsystemBase {
 
@@ -204,6 +206,41 @@ public class Arm extends SubsystemBase {
 
   public boolean hasArmWristReachedPosition(){
     return hasArmReachedPosition() && hasWristReachedPosition();
+  }
+
+
+  // Arm Commands
+
+
+  public Command getArmMoveUpCommand(){
+    return new CommandBuilder(this)
+      .onInitialize(()->setArmDutyCycle(ArmConstants.ARM_SPEED_UP))
+      .onEnd(()->armStop());
+  }
+
+  public Command getArmMoveDownCommand(){
+    return new CommandBuilder(this)
+      .onInitialize(()->setArmDutyCycle(ArmConstants.ARM_SPEED_DOWN))
+      .onEnd(()->armStop());
+  }
+
+  public Command getArmMoveToPositionCommand(double position){
+    return new CommandBuilder(this)
+      .onInitialize(()->armToPosition(position))
+      .onEnd(()->armStop())
+      .isFinished(()->!hasArmReachedPosition());
+  }
+
+  public Command getWristMoveDownCommand(){
+    return new CommandBuilder(this)
+      .onInitialize(()->setWristDutyCycle(ArmConstants.WRIST_SPEED_DOWN))
+      .onEnd(()->wristStop());
+  }
+
+  public Command getWristMoveUpCommand(){
+    return new CommandBuilder(this)
+      .onInitialize(()->setWristDutyCycle(ArmConstants.WRIST_SPEED_UP))
+      .onEnd(()->wristStop());
   }
 
 }

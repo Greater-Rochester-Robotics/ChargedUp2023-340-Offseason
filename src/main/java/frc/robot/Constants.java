@@ -104,11 +104,11 @@ public class Constants {
 
         public static final double ABS_ENC_TO_RAD_CONVERSION_FACTOR = TWO_PI;
 
-        public static final double ARM_SPEED_UP = 0;
-        public static final double ARM_SPEED_DOWN = 0;
+        public static final double ARM_SPEED_UP = 0.1;
+        public static final double ARM_SPEED_DOWN = -0.1;
 
-        public static final double WRIST_SPEED_UP = 0;
-        public static final double WRIST_SPEED_DOWN = 0;
+        public static final double WRIST_SPEED_UP = 0.2;
+        public static final double WRIST_SPEED_DOWN = -0.2;
 
         public static double armControllerP = 0;
         public static double armControllerI = 0;
@@ -146,7 +146,7 @@ public class Constants {
 
         public static final int ARM_MOTOR = 10; 
 
-        public static final int WRIST_MOTOR = 1;
+        public static final int WRIST_MOTOR = 11;
 
         public static final int WRIST_INNER_LIMIT_SWITCH = 1;
         public static final int WRIST_OUTER_LIMIT_SWITCH = 2;
