@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.swervelib.SwervePIDFConfig;
 import frc.robot.subsystems.swervelib.rev.NEOConfig;
 
@@ -27,23 +28,23 @@ public class Constants {
         public static final Translation2d FRONT_RIGHT_POSITION = new Translation2d(0.219075,-0.219075); 
 
         /* Swerve Module Drive Motor Constants */
-                //This is the conversion from one full rotation of the motor to the distance that the robot travels     7.13:1//the ratio from mechanical specs
-        public static final double DRIVE_ENC_TO_METERS_FACTOR = 0.012  * Math.PI / 6.54; //Colsen wheel .012 meters diameter 6.54:1 ratio
+                //This is the conversion from one full rotation of the motor to the distance that the robot travels    
+        public static final double DRIVE_ENC_TO_METERS_FACTOR = 0.12  * Math.PI / 6.54; //Colsen wheel .12 meters diameter 6.54:1 ratio
         public static final double MINIMUM_DRIVE_SPEED = 0.01;// the slowest the wheels can turn, in m/s
         public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.05;// the slowest the wheels can turn, in duty cycle
-        public static final double MOTOR_MAXIMUM_VELOCITY = 4.78536;//4.33 5.19
+        public static final double MOTOR_MAXIMUM_VELOCITY = 5.3;//4.33 5.19
         public static final double PATH_MAXIMUM_VELOCITY = 3.5;
         public static final double MAXIMUM_ACCELERATION = 1.25;
-        public static final double MAX_ROBOT_ROT_VELOCITY = 2;
+        public static final double MAX_ROBOT_ROT_VELOCITY = 3.5;
 
         // public static final double MAX_ROBOT_ROT_VELOCITY = MAXIMUM_VELOCITY / DISTANCE_TO_MODULE_0;
         public static final double MAXIMUM_VOLTAGE = 12.0;
-        public static final double SWERVE_DRIVE_P_VALUE = 1000; // 0.035;
+        public static final double SWERVE_DRIVE_P_VALUE = 0.001; //0.035
         public static final double SWERVE_DRIVE_I_VALUE = 0.0;
-        public static final double SWERVE_DRIVE_D_VALUE = 25;
-        public static final double SWERVE_DRIVE_FF_VALUE = 1023 / (MOTOR_MAXIMUM_VELOCITY / DRIVE_ENC_TO_METERS_FACTOR);
+        public static final double SWERVE_DRIVE_D_VALUE = 0.0; //25
+        public static final double SWERVE_DRIVE_FF_VALUE = 1 / (MOTOR_MAXIMUM_VELOCITY);
         public static final SwervePIDFConfig MOVE_PIDF = new SwervePIDFConfig(SWERVE_DRIVE_P_VALUE, SWERVE_DRIVE_I_VALUE, SWERVE_DRIVE_D_VALUE, SWERVE_DRIVE_FF_VALUE);
-        public static final NEOConfig MOVE_CONFIG = new NEOConfig(MOVE_PIDF, false, false, MAXIMUM_VOLTAGE);
+        public static final NEOConfig MOVE_CONFIG = new NEOConfig(MOVE_PIDF, true, true, MAXIMUM_VOLTAGE);
 
 
         /* Swerve Module Rotation constants */
@@ -110,31 +111,42 @@ public class Constants {
         public static final double WRIST_SPEED_UP = 0.2;
         public static final double WRIST_SPEED_DOWN = -0.2;
 
-        public static double armControllerP = 0;
-        public static double armControllerI = 0;
-        public static double armControllerD = 0;
-        public static double armControllerFF = 0;
+        public static final double ARM_P = 2.2;
+        public static final double ARM_I = 0;
+        public static final double ARM_D = 0;
+        public static final double ARM_F = 0;
 
-        public static final double WRIST_P = 1.2;
+        public static final double WRIST_P = 1.4;
         public static final double WRIST_I = 0;
         public static final double WRIST_D = 0;
         public static final double WRIST_F = 0;
 
         public static final double WRIST_MAX_PID_OUTPUT = .9;
+        public static final double ARM_MAX_PID_OUTPUT = .2;
 
-        public static double armTolerance;
+        public static final double ARM_TOLERANCE = 0.05;
+        public static final double WRIST_TOLERANCE = 0.05;
 
-        public static double wristTolerance = 0.05;
+        public static final double ARM_MAX = 0.635;
+        public static final double ARM_MIN = 0.43;
+        public static final double WRIST_MAX = 5.55;
+        public static final double WRIST_MIN = 3.4;
 
-        public static double INTAKE_ARM_POSITION = .419;
-        public static double UP_ARM_POSITION = .63;
-
-        public static double INTAKE_WRIST_POSITION = 3.5;
-        public static double SAFE_WRIST_POSITION = 5.5;
+        public static final class Positions {
+            public static final Arm.Position INTAKE = new Arm.Position(.435, 3.45);
+            public static final Arm.Position SAFE = new Arm.Position(.435, 5.5);
+            public static final Arm.Position SHOOT_LOW = new Arm.Position(.435, 4.0);
+            public static final Arm.Position SHOOT_MID = new Arm.Position(.435, 5.0);
+            public static final Arm.Position SHOOT_HIGH = new Arm.Position(.435, 5.2);
+            public static final Arm.Position SHOOT_FAR = new Arm.Position(.63, 4.5);
+        }
     }
     public static class IntakeConstants {
-
-        public static final double INTAKE_SPEED = .25;
+        public static final double INTAKE_SPEED = 0.35;
+        public static final double SHOOT_SPEED_LOW = -0.1;
+        public static final double SHOOT_SPEED_MID = -0.15;
+        public static final double SHOOT_SPEED_HIGH = -0.45;
+        public static final double SHOOT_SPEED_FAR = -1.0;
     }
 
     public static class RobotMap {

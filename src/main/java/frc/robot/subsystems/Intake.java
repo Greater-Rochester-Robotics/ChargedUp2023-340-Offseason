@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,7 +40,7 @@ public class Intake extends SubsystemBase {
     upperMotor.setIdleMode(IdleMode.kBrake);
     upperMotor.setClosedLoopRampRate(1);
 
-    upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
+    upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
     upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
     upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
     upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 59467);
@@ -47,20 +48,19 @@ public class Intake extends SubsystemBase {
     upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 59424);
     upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50952);
 
+    lowerMotor.restoreFactoryDefaults();
     lowerMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
     lowerMotor.setInverted(false);
     lowerMotor.setIdleMode(IdleMode.kBrake);
     lowerMotor.setClosedLoopRampRate(1);
     
-    lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
+    lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 59467);
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 59453);
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 59424);
     lowerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50952);
-
-    lowerMotor.follow(upperMotor);
 
     cubeLimit = new DigitalInput(Constants.RobotMap.INTAKE_CUBE_LIMIT_DIGITAL_INPUT);
 
@@ -78,34 +78,29 @@ public class Intake extends SubsystemBase {
     }
   }
 
-  public void setIntakeDutyCycle(double speed){
-    upperMotor.set(speed);
-  }
-
   public boolean hasCube(){
     return !cubeLimit.get();
   }
 
     //----------Commands----------
 
-  public Command getIntakeStopCommand(){
-    return new InstantCommand(()->setIntakeDutyCycle(0.0),this);
-  }
-
-  public Command getIntakeCubeCommand(){
+  public Command setMotors(double upperSpeed, double lowerSpeed) {
     return new CommandBuilder(this)
-      .onInitialize(()->setIntakeDutyCycle(hasCube()?0.0:IntakeConstants.INTAKE_SPEED))
-      .onEnd(()->setIntakeDutyCycle(0.0))
-      .isFinished(this::hasCube);
+      .onInitialize(() -> {
+          upperMotor.set(upperSpeed);
+          lowerMotor.set(lowerSpeed);
+        }
+      )
+      .isFinished(true);
   }
 
-  public Command getIntakeSpitCommand(double speed){
-    return this.getIntakeSpitCommand(()->speed);
+  public Command setMotors(double speed) {
+    return setMotors(speed, speed);
   }
 
-  public Command getIntakeSpitCommand(DoubleSupplier speed){
-    return new CommandBuilder(this)
-      .onExecute(()->setIntakeDutyCycle(speed.getAsDouble()))
-      .onEnd(()->setIntakeDutyCycle(0.0));
+  public Command pickUpCube() {
+    return setMotors(IntakeConstants.INTAKE_SPEED)
+      .andThen(Commands.waitUntil(this::hasCube))
+      .andThen(setMotors(0.0));
   }
 }

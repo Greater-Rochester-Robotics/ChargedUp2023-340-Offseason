@@ -65,7 +65,7 @@ public class SwerveMoveNEO implements SwerveMoveMotor{
         }
 
         driveMotor.getEncoder().setPositionConversionFactor(encToMetersConvFactor);
-        driveMotor.getEncoder().setVelocityConversionFactor(encToMetersConvFactor);
+        driveMotor.getEncoder().setVelocityConversionFactor(encToMetersConvFactor/60);
         
         driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 1000);
         try{

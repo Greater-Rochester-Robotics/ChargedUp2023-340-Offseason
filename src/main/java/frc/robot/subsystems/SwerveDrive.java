@@ -170,7 +170,8 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("GyroPitchVel", this.getRotationalVelocityPitch());
 
     for(int i = 0; i < swerveModules.length; i++) {
-      SmartDashboard.putNumber("Module relative encoder " + i, swerveModules[i].getRotationMotor().getRelEncCount());
+      SmartDashboard.putNumber("Drive distance " + i, swerveModules[i].getDriveMotor().getDriveDistance());
+      SmartDashboard.putNumber("Drive velocity " + i, swerveModules[i].getDriveMotor().getDriveVelocity());
     }
 
     //run odometry update on the odometry object
@@ -203,6 +204,7 @@ public class SwerveDrive extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, isVeloMode? Constants.SwerveDriveConstants.PATH_MAXIMUM_VELOCITY : 1.0);
     
     for (int i = 0; i < targetStates.length; i++) {
+      SmartDashboard.putNumber("Target speed " + i, targetStates[i].speedMetersPerSecond);
       if(!rotationOnlyMode && Math.abs(targetStates[i].speedMetersPerSecond) < (isVeloMode?Constants.SwerveDriveConstants.MINIMUM_DRIVE_SPEED:Constants.SwerveDriveConstants.MINIMUM_DRIVE_DUTY_CYCLE)){
         //stop this module if speed is too slow
         swerveModules[i].stopAll();

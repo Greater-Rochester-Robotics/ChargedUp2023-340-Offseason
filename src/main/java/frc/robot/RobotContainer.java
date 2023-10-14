@@ -4,9 +4,8 @@
 
 package frc.robot;
 
-import javax.sound.midi.Sequence;
+import static frc.robot.commands.Routines.*;
 
-import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -14,30 +13,20 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.ArmHoldPosition;
-import frc.robot.commands.WristToPosition;
 import frc.robot.commands.drive.DriveFieldRelative;
-import frc.robot.commands.drive.DriveFieldRelativeAdvanced;
 import frc.robot.commands.drive.DriveLockWheels;
 import frc.robot.commands.drive.DriveRobotCentric;
 import frc.robot.commands.drive.DriveStopAllModules;
-import frc.robot.commands.drive.auto.DriveFollowTrajectory;
 import frc.robot.commands.drive.util.DriveAdjustModulesManually;
 import frc.robot.commands.drive.util.DriveAllModulesPositionOnly;
-import frc.robot.commands.drive.util.DriveFindMaxAccel;
 import frc.robot.commands.drive.util.DriveOneModule;
 import frc.robot.commands.drive.util.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.drive.util.DriveResetGyroToZero;
-import frc.robot.commands.drive.util.DriveSetGyro;
-import frc.robot.commands.drive.util.DriveTuneDriveMotorFeedForward;
-import frc.robot.commands.drive.util.DriveTurnToAngleInRad;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
@@ -97,14 +86,8 @@ public class RobotContainer {
   static final Trigger coDriverRTButton70 = new JoyTriggerButton(coDriver, .7, Axis.kRightTrigger);
   static final Trigger coDriverLTButton25 = new JoyTriggerButton(coDriver, .25, Axis.kLeftTrigger);
   static final Trigger coDriverRTButton25 = new JoyTriggerButton(coDriver, .25, Axis.kRightTrigger);
-
-  //Climber next step button is aliased here.
-  public static final Trigger climberManButton = coDriverA;
-  public static final Trigger climberAutoButton = coDriverB;
-  
   
   //The robot's subsystems are instantiated here
-
   public static SwerveDrive swerveDrive;
   public static Arm arm;
   public static Intake intake;
@@ -112,18 +95,12 @@ public class RobotContainer {
   //The sendable chooser for autonomous is constructed here
   public static SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
     //create(construct) subsystems
-    
     swerveDrive = new SwerveDrive();
     arm = new Arm();
     intake = new Intake();
-    // swerveDrive.setDefaultCommand(new DriveFieldRelativeAdvanced(false));
-    
-    // arm.setDefaultCommand(new ArmHoldPosition());
 
     //Add all autos to the auto selector
     configureAutoModes();
@@ -141,14 +118,6 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveAllModulesPositionOnly());
     SmartDashboard.putData(new DriveStopAllModules());//For setup of swerve
     SmartDashboard.putData("Lock Wheels", new DriveLockWheels());
-
-
-
-    SmartDashboard.putNumber("SpeedIShoot",0.0);
-    SmartDashboard.putNumber("angleIShoot",0.0);
-
-    // SmartDashboard.putData(new AutoRightFiveBall());
-
   }
 
   /**
@@ -158,29 +127,21 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    /* =================== DEFAULT COMMANDS =================== */
+    arm.setDefaultCommand(arm.holdPosition());
+    swerveDrive.setDefaultCommand(new DriveFieldRelative(true));
+
     /* ==================== DRIVER BUTTONS ==================== */
-    // driverA.whileTrue(intake.getIntakeCubeCommand());
-    driverA.whileTrue(arm.getWristMoveUpCommand());
-    driverB.whileTrue(arm.getWristMoveDownCommand());
-    driverX.whileTrue(new WristToPosition(4));
-    driverY.whileTrue(new WristToPosition(5));
-
-
-    driverLB.whenActive(new DriveResetGyroToZero());
-    // driverRB.whileActiveContinuous(new DriveOnTarget(0));
-    driverBack.or(driverStart).toggleWhenActive(new DriveRobotCentric(false)); 
-    // driverStart.whenPressed(new AutoMidFourBall());
-    // driverStart.whileHeld(new SequentialCommandGroup(
-    //   new DriveTurnToAngle(Math.toRadians(-135)).withTimeout(2.5),
-    //   new WaitCommand(.5),
-    //   new DriveFollowTrajectory("DriveLeftToOppBallShoot")
-    // ));
+    driverA.onTrue(intake()).onFalse(storeCube());
+    driverDLeft.onTrue(new DriveResetGyroToZero());
+    driverBack.or(driverStart).toggleOnTrue(new DriveRobotCentric(true)); 
 
     /* =================== CODRIVER BUTTONS =================== */
-    
-    
+    coDriverA.onTrue(shootLow()).onFalse(storeCube());
+    coDriverB.onTrue(shootMid()).onFalse(storeCube());
+    coDriverX.onTrue(shootHigh()).onFalse(storeCube());
+    coDriverY.onTrue(shootFar()).onFalse(storeCube());
   }
-
 
   /**
    * Define all autonomous modes here to have them 
@@ -188,23 +149,17 @@ public class RobotContainer {
    * They will appear in the order entered
    */
   private void configureAutoModes() {
-    
     autoChooser.setDefaultOption("Wait 1 sec(do nothing)", new WaitCommand(1));
-   
-    // autoChooser.addOption("5 ball", new AutoRightFiveBall());
-
-
     SmartDashboard.putData(RobotContainer.autoChooser);
   }
 
-  
   /**
    * A method to return the value of a driver joystick axis,
    * which runs from -1.0 to 1.0, with a .1 dead zone(a 0 
-   * value returned if the joystick value is between -.1 and 
-   * .1)
-   * @param axis
-   * @return value of the joystick, from -1.0 to 1.0 where 0.0 is centered
+   * value returned if the joystick value is between -.1 and .1)
+   * 
+   * @param axis the joystick axis object
+   * @return the value of the joystick, from -1.0 to 1.0 where 0.0 is centered
    */
   public double getDriverAxis(Axis axis) {
     return (driver.getRawAxis(axis.value) < -.1 || driver.getRawAxis(axis.value) > .1)
@@ -215,8 +170,8 @@ public class RobotContainer {
   /**
    * Accessor method to set driver rumble function
    * 
-   * @param leftRumble
-   * @param rightRumble
+   * @param leftRumble the rumble amount for left side of controller
+   * @param rightRumble the rumble amount for right side of controller
    */
   public static void setDriverRumble(double leftRumble, double rightRumble) {
     driver.setRumble(RumbleType.kLeftRumble, leftRumble);
@@ -224,13 +179,24 @@ public class RobotContainer {
   }
 
   /**
-     * accessor to get the true/false of the buttonNum 
-     * on the driver control
-     * @param buttonNum
-     * @return the value of the button
-     */
-    public boolean getDriverButton(int buttonNum) {
-      return driver.getRawButton(buttonNum);
+   * Accessor method to set driver rumble function
+   * 
+   * @param rumble the rumble amount for both sides of controller
+   */
+  public static void setDriverRumble(double rumble) {
+    driver.setRumble(RumbleType.kLeftRumble, rumble);
+    driver.setRumble(RumbleType.kRightRumble, rumble);
+  }
+
+  /**
+   * accessor to get the true/false of the buttonNum 
+   * on the driver control
+   * 
+   * @param buttonNum the button number
+   * @return the value of the button
+   */
+  public boolean getDriverButton(int buttonNum) {
+    return driver.getRawButton(buttonNum);
   }
 
   /**
@@ -246,7 +212,8 @@ public class RobotContainer {
    *  down left  | 225
    *    left     | 270
    *   up left   | 315
-   * @return
+   * 
+   * @return the DPad position
    */
   public int getDriverDPad() {
     return (driver.getPOV());
@@ -255,10 +222,10 @@ public class RobotContainer {
   /**
    * A method to return the value of a codriver joystick axis,
    * which runs from -1.0 to 1.0, with a .1 dead zone(a 0 
-   * value returned if the joystick value is between -.1 and 
-   * .1) 
-   * @param axis
-   * @return
+   * value returned if the joystick value is between -.1 and .1)
+   * 
+   * @param axis the joystick axis object
+   * @return the value of the joystick, from -1.0 to 1.0 where 0.0 is centered
    */
   public double getCoDriverAxis(Axis axis) {
     return (coDriver.getRawAxis(axis.value) < -.1 || coDriver.getRawAxis(axis.value) > .1)
@@ -269,8 +236,8 @@ public class RobotContainer {
   /**
    * Accessor method to set codriver rumble function
    * 
-   * @param leftRumble
-   * @param rightRumble
+   * @param leftRumble the rumble amount for left side of controller
+   * @param rightRumble the rumble amount for right side of controller
    */
   public static void setCoDriverRumble(double leftRumble, double rightRumble) {
     coDriver.setRumble(RumbleType.kLeftRumble, leftRumble);
@@ -278,9 +245,20 @@ public class RobotContainer {
   }
 
   /**
+   * Accessor method to set driver rumble function
+   * 
+   * @param rumble the rumble amount for both sides of controller
+   */
+  public static void setCoDriverRumble(double rumble) {
+    coDriver.setRumble(RumbleType.kLeftRumble, rumble);
+    coDriver.setRumble(RumbleType.kRightRumble, rumble);
+  }
+
+  /**
    * accessor to get the true/false of the buttonNum 
    * on the coDriver control
-   * @param buttonNum
+   * 
+   * @param buttonNum the button id
    * @return the value of the button
    */
   public boolean getCoDriverButton(int buttonNum) {
@@ -306,6 +284,7 @@ public class RobotContainer {
   /**
      * Gets the rotation value for the robot
      * Currently: from the driver's controller for swerve (LT and RT).
+     * 
      * @param isVeloMode If velocity mode is being used.
      * @return The percent output if velocity mode is not being used, otherwise the velocity. 
      */

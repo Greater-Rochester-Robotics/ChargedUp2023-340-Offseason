@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
@@ -13,9 +15,13 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -24,23 +30,16 @@ import frc.robot.commands.CommandBuilder;
 
 public class Arm extends SubsystemBase {
 
-  private byte smartDashboardDelay = 0;
-
   private CANSparkMax armMotor;
   private AbsoluteEncoder armEncoder;
   private SparkMaxPIDController armController;
-
-  private double targetArmPosition = 0;
-  private double targetWristPosition = 0;
-  private boolean isArmClosedLoop = false;
-  private boolean isWristClosedLoop = false;
 
   private CANSparkMax wristMotor;
   private AbsoluteEncoder wristEncoder;
   private SparkMaxPIDController wristController;
 
-  private DigitalInput wristInnerLimitSwitch;
-  private DigitalInput wristOuterLimitSwitch;
+  private double lastArmPosition, lastWristPosition;
+  private boolean positionInitialized;
   
   /** Creates a new Arm. */
   public Arm() {
@@ -53,7 +52,7 @@ public class Arm extends SubsystemBase {
     armMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
     armMotor.setInverted(false);
     armMotor.setIdleMode(IdleMode.kBrake);
-    armMotor.setClosedLoopRampRate(1);
+    // armMotor.setClosedLoopRampRate(1);
 
     // Arm frame settings.
     armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
@@ -71,11 +70,14 @@ public class Arm extends SubsystemBase {
     armEncoder.setInverted(true);
     armEncoder.setZeroOffset(0.880642);
 
+    armController.setOutputRange(-ArmConstants.ARM_MAX_PID_OUTPUT, ArmConstants.ARM_MAX_PID_OUTPUT);
+
+
     armController.setFeedbackDevice(armEncoder);
-    armController.setP(ArmConstants.armControllerP);
-    armController.setI(ArmConstants.armControllerI);
-    armController.setD(ArmConstants.armControllerD);
-    armController.setFF(ArmConstants.armControllerFF);
+    armController.setP(ArmConstants.ARM_P);
+    armController.setI(ArmConstants.ARM_I);
+    armController.setD(ArmConstants.ARM_D);
+    armController.setFF(ArmConstants.ARM_F);
 
     wristMotor = new CANSparkMax(Constants.RobotMap.WRIST_MOTOR, MotorType.kBrushless);
     wristEncoder = wristMotor.getAbsoluteEncoder(Type.kDutyCycle);
@@ -109,9 +111,6 @@ public class Arm extends SubsystemBase {
 
     wristController.setOutputRange(-ArmConstants.WRIST_MAX_PID_OUTPUT, ArmConstants.WRIST_MAX_PID_OUTPUT);
  
-    wristInnerLimitSwitch = new DigitalInput(Constants.RobotMap.WRIST_INNER_LIMIT_SWITCH);
-    wristOuterLimitSwitch = new DigitalInput(Constants.RobotMap.WRIST_OUTER_LIMIT_SWITCH);
-
     armMotor.burnFlash();
     wristMotor.burnFlash();
 
@@ -119,19 +118,12 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(isArmClosedLoop){
-      armController.setReference(targetArmPosition, ControlType.kPosition,0,armFeedForward());
-    }
-
-    // if(isWristClosedLoop){
-    //   wristController.setReference(targetWristPosition, ControlType.kPosition,0,wristFeedForward());
-    // }
-    
     // smartDashboardDelay++;
     // if(smartDashboardDelay >= 50){
       SmartDashboard.putNumber("armEncoder", armEncoder.getPosition());
       SmartDashboard.putNumber("wristEncoder", wristEncoder.getPosition());
       SmartDashboard.putNumber("applied wrist", wristMotor.getAppliedOutput());
+      SmartDashboard.putNumber("applied arm", armMotor.getAppliedOutput());
       // smartDashboardDelay = 0;
     // }
 
@@ -139,126 +131,95 @@ public class Arm extends SubsystemBase {
 
   // arm methods
 
-  public void setArmDutyCycle(double speed){
-    armController.setReference(speed, ControlType.kDutyCycle);
-    isArmClosedLoop = false;
-  }
-
-  public void armToPosition(double position){
-    targetArmPosition = position;
-    isArmClosedLoop = true;
-  }
-
-  public void armStop(){
-    armController.setReference(0, ControlType.kDutyCycle);
-    isArmClosedLoop = false;
-  }
-
-  public void armHoldPosition(){
-    targetArmPosition = getArmPosition();
-    isArmClosedLoop = true;
-  }
-
   public double getArmPosition() {
     return armEncoder.getPosition();
   }
 
-  public boolean hasArmReachedPosition(){
-    return Math.abs(armEncoder.getPosition() - targetArmPosition) < ArmConstants.armTolerance;
-  }
-
-  public double armFeedForward(){
-    return 0.0;
-  }
-
   // wrist methods
-
-  public void setWristDutyCycle(double speed){
-    wristController.setReference(speed, ControlType.kDutyCycle);
-    isWristClosedLoop = false;
-  }
-
-
-  public void wristToPosition(double position){
-    wristController.setReference(targetWristPosition, ControlType.kPosition);
-    targetWristPosition = position;
-    isWristClosedLoop = true;
-  }
-
-  public void wristStop(){
-    wristController.setReference(0, ControlType.kDutyCycle);
-    isWristClosedLoop = false;
-  }
 
   public double getWristPosition() {
     return wristEncoder.getPosition();
   }
 
-  public boolean hasWristReachedPosition(){
-    return Math.abs(wristEncoder.getPosition() - targetWristPosition) < ArmConstants.wristTolerance;
-  }
-
-  public boolean getInnerWistLimitSwitch(){
-    return wristInnerLimitSwitch.get();
-  }
-
-  public boolean getOuterWistLimitSwitch(){
-    return wristOuterLimitSwitch.get();
-  }
-
-  public double wristFeedForward(){
-    return 0.0;
-  }
-
-  // arm wrist methods
-
-  public void armWristToPosition(double armPosition, double wristPosition){
-    armToPosition(armPosition);
-    wristToPosition(wristPosition);
-  }
-
-  public void armWristStop(){
-    armStop();
-    wristStop();
-  }
-
-  public boolean hasArmWristReachedPosition(){
-    return hasArmReachedPosition() && hasWristReachedPosition();
-  }
-
-
   // Arm Commands
 
+  public Command setPosition(Position position) {
+    if(position.getArm() < ArmConstants.ARM_MIN || position.getArm() > ArmConstants.ARM_MAX || position.getWrist() < ArmConstants.WRIST_MIN || position.getWrist() > ArmConstants.WRIST_MAX) {
+      DriverStation.reportWarning("Arm position out of range", false);
+      return Commands.runOnce(() -> {}, this);
+    }
 
-  public Command getArmMoveUpCommand(){
     return new CommandBuilder(this)
-      .onInitialize(()->setArmDutyCycle(ArmConstants.ARM_SPEED_UP))
-      .onEnd(()->armStop());
+      .onInitialize(() -> {})
+      .onExecute(() -> {
+        armController.setReference(position.getArm(), CANSparkMax.ControlType.kPosition);
+        wristController.setReference(position.getWrist(), CANSparkMax.ControlType.kPosition);
+
+        lastArmPosition = getArmPosition();
+        lastWristPosition = getWristPosition();
+        positionInitialized = true;
+      })
+      .onEnd((interrupted) -> {
+        armMotor.stopMotor();
+        wristMotor.stopMotor();
+        if(!interrupted) {
+          lastArmPosition = position.getArm();
+          lastWristPosition = position.getWrist();
+        }
+      })
+      .isFinished(() -> {
+        return Math.abs(getArmPosition() - position.getArm()) < ArmConstants.ARM_TOLERANCE && Math.abs(getWristPosition() - position.getWrist()) < ArmConstants.WRIST_TOLERANCE;
+      });
   }
 
-  public Command getArmMoveDownCommand(){
+  public Command holdPosition() {
     return new CommandBuilder(this)
-      .onInitialize(()->setArmDutyCycle(ArmConstants.ARM_SPEED_DOWN))
-      .onEnd(()->armStop());
+      .onInitialize(() -> {})
+      .onExecute(() -> {
+        if(positionInitialized) {
+          armController.setReference(lastArmPosition, CANSparkMax.ControlType.kPosition);
+          wristController.setReference(lastWristPosition, CANSparkMax.ControlType.kPosition);
+        }
+      })
+      .onEnd((interrupted) -> {
+        armMotor.stopMotor();
+        wristMotor.stopMotor();
+      });
   }
 
-  public Command getArmMoveToPositionCommand(double position){
+  public Command setDutyCycle(Supplier<Double> armDutyCycle, Supplier<Double> wristDutyCycle) {
     return new CommandBuilder(this)
-      .onInitialize(()->armToPosition(position))
-      .onEnd(()->armStop())
-      .isFinished(()->!hasArmReachedPosition());
+      .onInitialize(() -> {})
+      .onExecute(() -> {
+        armMotor.set(armDutyCycle.get());
+        wristMotor.set(wristDutyCycle.get());
+        
+        lastArmPosition = getArmPosition();
+        lastWristPosition = getWristPosition();
+        positionInitialized = true;
+      })
+      .onEnd(() -> {
+        armMotor.stopMotor();
+        wristMotor.stopMotor();
+      });
   }
 
-  public Command getWristMoveDownCommand(){
-    return new CommandBuilder(this)
-      .onInitialize(()->setWristDutyCycle(ArmConstants.WRIST_SPEED_DOWN))
-      .onEnd(()->wristStop());
-  }
+  public static class Position {
+    private final double arm;
+    private final double wrist;
 
-  public Command getWristMoveUpCommand(){
-    return new CommandBuilder(this)
-      .onInitialize(()->setWristDutyCycle(ArmConstants.WRIST_SPEED_UP))
-      .onEnd(()->wristStop());
+    public Position(double arm, double wrist) {
+      this.arm = arm;
+      this.wrist = wrist;
+    }
+
+    public double getArm() {
+      return arm;
+    }
+
+    public double getWrist() {
+      return wrist;
+    }
   }
 
 }
