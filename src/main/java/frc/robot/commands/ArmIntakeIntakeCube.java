@@ -21,9 +21,9 @@ public class ArmIntakeIntakeCube extends SequentialCommandGroup {
     addCommands(
       Commands.deadline(
         intake.getIntakeCubeCommand(),
-        new ArmWristToPosition(ArmConstants.INTAKE_ARM_POSITION, ArmConstants.INTAKE_WIRIST_POSITON)
+        new ArmWristToPosition(ArmConstants.INTAKE_ARM_POSITION, ArmConstants.INTAKE_WRIST_POSITION)
       ),
-      new ArmWristToPosition(ArmConstants.SAFE_ARM_POSITION, ArmConstants.SAFE_WRIST_POSITION)
+      new ArmWristToPosition(ArmConstants.INTAKE_ARM_POSITION, ArmConstants.SAFE_WRIST_POSITION)
     );
   }
 }

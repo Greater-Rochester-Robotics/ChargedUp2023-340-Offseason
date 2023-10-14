@@ -48,14 +48,10 @@ public class Arm extends SubsystemBase {
     armEncoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
     armController = armMotor.getPIDController();
 
-    wristMotor = new CANSparkMax(Constants.RobotMap.WRIST_MOTOR, MotorType.kBrushless);
-    wristEncoder = wristMotor.getAbsoluteEncoder(Type.kDutyCycle);
-    wristController = wristMotor.getPIDController();
-
     // TODO: put correct settings
     // Arm motor settings.
     armMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
-    armMotor.setInverted(true);
+    armMotor.setInverted(false);
     armMotor.setIdleMode(IdleMode.kBrake);
     armMotor.setClosedLoopRampRate(1);
 
@@ -73,30 +69,51 @@ public class Arm extends SubsystemBase {
     armEncoder.setPositionConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR);
     armEncoder.setVelocityConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR / 60);
     armEncoder.setInverted(true);
-    //armEncoder.setZeroOffset(3.7332022);
+    armEncoder.setZeroOffset(0.880642);
 
+    armController.setFeedbackDevice(armEncoder);
     armController.setP(ArmConstants.armControllerP);
     armController.setI(ArmConstants.armControllerI);
     armController.setD(ArmConstants.armControllerD);
     armController.setFF(ArmConstants.armControllerFF);
 
-     // Wrist motor settings.
-     wristMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
-     wristMotor.setInverted(true);
-     wristMotor.setIdleMode(IdleMode.kBrake);
-     wristMotor.setClosedLoopRampRate(1);
-     
-     // Wrist frame settings.
-     wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
-     wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-     wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
-     wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 59467);
-     wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 59453);
-     wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 6);
-     wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 10);
+    wristMotor = new CANSparkMax(Constants.RobotMap.WRIST_MOTOR, MotorType.kBrushless);
+    wristEncoder = wristMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    wristController = wristMotor.getPIDController();
+
+    // Wrist motor settings.
+    wristMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
+    wristMotor.setInverted(false);
+    wristMotor.setIdleMode(IdleMode.kBrake);
+    // wristMotor.setClosedLoopRampRate(1);
+    
+    // Wrist frame settings.
+    wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+    wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+    wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
+    wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 59467);
+    wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 59453);
+    wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 6);
+    wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 10);
+
+    // Wrist encoder settings
+    wristEncoder.setPositionConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR);
+    wristEncoder.setVelocityConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR / 60);
+    wristEncoder.setZeroOffset(6.51177-Constants.TWO_PI);
+
+    wristController.setFeedbackDevice(wristEncoder);
+    wristController.setP(ArmConstants.WRIST_P);    
+    wristController.setI(ArmConstants.WRIST_I);
+    wristController.setD(ArmConstants.WRIST_D);
+    wristController.setFF(ArmConstants.WRIST_F);
+
+    wristController.setOutputRange(-ArmConstants.WRIST_MAX_PID_OUTPUT, ArmConstants.WRIST_MAX_PID_OUTPUT);
  
-     wristInnerLimitSwitch = new DigitalInput(Constants.RobotMap.WRIST_INNER_LIMIT_SWITCH);
-     wristOuterLimitSwitch = new DigitalInput(Constants.RobotMap.WRIST_OUTER_LIMIT_SWITCH);
+    wristInnerLimitSwitch = new DigitalInput(Constants.RobotMap.WRIST_INNER_LIMIT_SWITCH);
+    wristOuterLimitSwitch = new DigitalInput(Constants.RobotMap.WRIST_OUTER_LIMIT_SWITCH);
+
+    armMotor.burnFlash();
+    wristMotor.burnFlash();
 
   }
 
@@ -106,16 +123,17 @@ public class Arm extends SubsystemBase {
       armController.setReference(targetArmPosition, ControlType.kPosition,0,armFeedForward());
     }
 
-    if(isWristClosedLoop){
-      wristController.setReference(targetWristPosition, ControlType.kPosition,0,wristFeedForward());
-    }
+    // if(isWristClosedLoop){
+    //   wristController.setReference(targetWristPosition, ControlType.kPosition,0,wristFeedForward());
+    // }
     
-    smartDashboardDelay++;
-    if(smartDashboardDelay >= 50){
+    // smartDashboardDelay++;
+    // if(smartDashboardDelay >= 50){
       SmartDashboard.putNumber("armEncoder", armEncoder.getPosition());
       SmartDashboard.putNumber("wristEncoder", wristEncoder.getPosition());
-      smartDashboardDelay = 0;
-    }
+      SmartDashboard.putNumber("applied wrist", wristMotor.getAppliedOutput());
+      // smartDashboardDelay = 0;
+    // }
 
   }
 
@@ -162,7 +180,7 @@ public class Arm extends SubsystemBase {
 
 
   public void wristToPosition(double position){
-    wristController.setReference(targetWristPosition-getArmPosition(), ControlType.kPosition);
+    wristController.setReference(targetWristPosition, ControlType.kPosition);
     targetWristPosition = position;
     isWristClosedLoop = true;
   }
@@ -173,7 +191,7 @@ public class Arm extends SubsystemBase {
   }
 
   public double getWristPosition() {
-    return wristEncoder.getPosition()-getArmPosition();
+    return wristEncoder.getPosition();
   }
 
   public boolean hasWristReachedPosition(){

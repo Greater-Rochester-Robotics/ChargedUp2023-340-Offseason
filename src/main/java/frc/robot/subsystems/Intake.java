@@ -35,7 +35,7 @@ public class Intake extends SubsystemBase {
     lowerMotor = new CANSparkMax(Constants.RobotMap.INTAKE_LOWER_MOTOR, MotorType.kBrushless);
     
     upperMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
-    upperMotor.setInverted(true);
+    upperMotor.setInverted(false);
     upperMotor.setIdleMode(IdleMode.kBrake);
     upperMotor.setClosedLoopRampRate(1);
 
@@ -48,7 +48,7 @@ public class Intake extends SubsystemBase {
     upperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50952);
 
     lowerMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
-    lowerMotor.setInverted(true);
+    lowerMotor.setInverted(false);
     lowerMotor.setIdleMode(IdleMode.kBrake);
     lowerMotor.setClosedLoopRampRate(1);
     
@@ -63,6 +63,9 @@ public class Intake extends SubsystemBase {
     lowerMotor.follow(upperMotor);
 
     cubeLimit = new DigitalInput(Constants.RobotMap.INTAKE_CUBE_LIMIT_DIGITAL_INPUT);
+
+    upperMotor.burnFlash();
+    lowerMotor.burnFlash();
   }
   
   @Override
@@ -70,7 +73,7 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
     smartDashboardDelay++;
     if(smartDashboardDelay >= 50){
-       SmartDashboard.putBoolean("cube limit switch", getCubeLimit());
+       SmartDashboard.putBoolean("cube limit switch", hasCube());
        smartDashboardDelay = 0;
     }
   }
@@ -79,8 +82,8 @@ public class Intake extends SubsystemBase {
     upperMotor.set(speed);
   }
 
-  public boolean getCubeLimit(){
-    return cubeLimit.get();
+  public boolean hasCube(){
+    return !cubeLimit.get();
   }
 
     //----------Commands----------
@@ -91,9 +94,9 @@ public class Intake extends SubsystemBase {
 
   public Command getIntakeCubeCommand(){
     return new CommandBuilder(this)
-      .onInitialize(()->setIntakeDutyCycle(IntakeConstants.INTAKE_SPEED))
+      .onInitialize(()->setIntakeDutyCycle(hasCube()?0.0:IntakeConstants.INTAKE_SPEED))
       .onEnd(()->setIntakeDutyCycle(0.0))
-      .isFinished(this::getCubeLimit);
+      .isFinished(this::hasCube);
   }
 
   public Command getIntakeSpitCommand(double speed){

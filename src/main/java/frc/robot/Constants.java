@@ -85,7 +85,7 @@ public class Constants {
         // public static final double DRIVE_ROTATION_MIN_VELOCITY = 25;
 
         /* Driver Scaling Constants */
-        public static final double DRIVER_SPEED_SCALE_LINEAR = 0.65 * 0.85;
+        public static final double DRIVER_SPEED_SCALE_LINEAR = 0.65;
         public static final double DRIVER_SPEED_SCALE_ROTATIONAL = .75;
         public static final double DRIVER_ROT_SPEED_SCALE_EXPONENTIAL = 1.0;
         public static final double DRIVER_PERCENT_ROT_SPEED_SCALE_LINEAR = 1.0;
@@ -104,8 +104,8 @@ public class Constants {
 
         public static final double ABS_ENC_TO_RAD_CONVERSION_FACTOR = TWO_PI;
 
-        public static final double ARM_SPEED_UP = 0.1;
-        public static final double ARM_SPEED_DOWN = -0.1;
+        public static final double ARM_SPEED_UP = 0.2;
+        public static final double ARM_SPEED_DOWN = -0.2;
 
         public static final double WRIST_SPEED_UP = 0.2;
         public static final double WRIST_SPEED_DOWN = -0.2;
@@ -115,15 +115,22 @@ public class Constants {
         public static double armControllerD = 0;
         public static double armControllerFF = 0;
 
+        public static final double WRIST_P = 1.2;
+        public static final double WRIST_I = 0;
+        public static final double WRIST_D = 0;
+        public static final double WRIST_F = 0;
+
+        public static final double WRIST_MAX_PID_OUTPUT = .9;
+
         public static double armTolerance;
 
-        public static double wristTolerance;
+        public static double wristTolerance = 0.05;
 
-        public static double INTAKE_ARM_POSITION = 0;
-        public static double INTAKE_WIRIST_POSITON = 0;
+        public static double INTAKE_ARM_POSITION = .419;
+        public static double UP_ARM_POSITION = .63;
 
-        public static double SAFE_ARM_POSITION = 0;
-        public static double SAFE_WRIST_POSITION = 0;
+        public static double INTAKE_WRIST_POSITION = 3.5;
+        public static double SAFE_WRIST_POSITION = 5.5;
     }
     public static class IntakeConstants {
 
@@ -145,7 +152,6 @@ public class Constants {
         public static final int FRONT_RIGHT_ROTATE_MOTOR = 9;//drive module 3
 
         public static final int ARM_MOTOR = 10; 
-
         public static final int WRIST_MOTOR = 11;
 
         public static final int WRIST_INNER_LIMIT_SWITCH = 1;

@@ -22,7 +22,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.ArmHoldPosition;
+import frc.robot.commands.WristToPosition;
 import frc.robot.commands.drive.DriveFieldRelative;
+import frc.robot.commands.drive.DriveFieldRelativeAdvanced;
 import frc.robot.commands.drive.DriveLockWheels;
 import frc.robot.commands.drive.DriveRobotCentric;
 import frc.robot.commands.drive.DriveStopAllModules;
@@ -121,7 +123,7 @@ public class RobotContainer {
     intake = new Intake();
     // swerveDrive.setDefaultCommand(new DriveFieldRelativeAdvanced(false));
     
-    arm.setDefaultCommand(new ArmHoldPosition());
+    // arm.setDefaultCommand(new ArmHoldPosition());
 
     //Add all autos to the auto selector
     configureAutoModes();
@@ -157,7 +159,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* ==================== DRIVER BUTTONS ==================== */
-    driverA.whileTrue(intake.getIntakeCubeCommand());
+    // driverA.whileTrue(intake.getIntakeCubeCommand());
+    driverA.whileTrue(arm.getWristMoveUpCommand());
+    driverB.whileTrue(arm.getWristMoveDownCommand());
+    driverX.whileTrue(new WristToPosition(4));
+    driverY.whileTrue(new WristToPosition(5));
+
 
     driverLB.whenActive(new DriveResetGyroToZero());
     // driverRB.whileActiveContinuous(new DriveOnTarget(0));
