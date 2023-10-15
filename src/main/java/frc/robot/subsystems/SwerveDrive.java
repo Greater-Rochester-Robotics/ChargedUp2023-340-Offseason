@@ -21,8 +21,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 import frc.robot.Constants;
+import frc.robot.GRRMath;
 import frc.robot.subsystems.ADIS16470_IMU.IMUAxis;
+import frc.robot.subsystems.swervelib.GRRSwerveTargetController;
 import frc.robot.subsystems.swervelib.SwerveModule;
+import frc.robot.subsystems.swervelib.GRRSwerveTargetController.GRRSwerveTarget;
 import frc.robot.subsystems.swervelib.ctre.SwerveAbsoluteCANCoder;
 import frc.robot.subsystems.swervelib.rev.SwerveMoveNEO;
 import frc.robot.subsystems.swervelib.rev.SwerveRotationNEO;
@@ -65,6 +68,9 @@ public class SwerveDrive extends SubsystemBase {
   /** Booleans */
   private boolean hasPoseBeenSet = false;
   private boolean isOdometry = true;
+
+  private GRRSwerveTarget lastTarget;
+  private GRRSwerveTargetController targetController;
 
   /**
    * This enumeration clarifies the numbering of the swerve module for new users.
@@ -157,6 +163,10 @@ public class SwerveDrive extends SubsystemBase {
 
     hasPoseBeenSet = false;
     isOdometry = true;
+
+    lastTarget = new GRRSwerveTarget(new ChassisSpeeds(), getSwerveModuleStates());
+    targetController = new GRRSwerveTargetController(driveKinematics, new Translation2d[] {Constants.SwerveDriveConstants.FRONT_LEFT_POSITION, Constants.SwerveDriveConstants.REAR_LEFT_POSITION, 
+      Constants.SwerveDriveConstants.REAR_RIGHT_POSITION, Constants.SwerveDriveConstants.FRONT_RIGHT_POSITION});
   }
 
   @Override
@@ -177,8 +187,8 @@ public class SwerveDrive extends SubsystemBase {
     //run odometry update on the odometry object
     driveOdometry.update(getGyroRotation2d(), getSwerveModulePositions(), getGyroInRadPitch(), getGyroInRadRoll());
     // SmartDashboard.putNumber("GyroRate", this.getRotationalVelocity());
-    // SmartDashboard.putNumber("Odometry X", getCurPose2d().getX());
-    // SmartDashboard.putNumber("Odometry Y", getCurPose2d().getY());
+    SmartDashboard.putNumber("Odometry X", getCurPose2d().getX());
+    SmartDashboard.putNumber("Odometry Y", getCurPose2d().getY());
   }
 
   /**
@@ -198,10 +208,20 @@ public class SwerveDrive extends SubsystemBase {
    * @param isVeloMode true if velocity mode, false if percent output mode
    */
   public void driveRobotCentric(ChassisSpeeds chassisSpeeds , boolean isVeloMode, boolean rotationOnlyMode){
-    //instantiate an array of SwerveModuleStates, set equal to the output of toSwerveModuleStates() 
-    SwerveModuleState[] targetStates = driveKinematics.toSwerveModuleStates(chassisSpeeds);
-    //use SwerveDriveKinematic.desaturateWheelSpeeds(), max speed is 1 if percentOutput, MaxVelovcity if velocity mode
-    SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, isVeloMode? Constants.SwerveDriveConstants.PATH_MAXIMUM_VELOCITY : 1.0);
+    double dtheta = chassisSpeeds.omegaRadiansPerSecond * 0.040;
+    double sin = dtheta / 2.0;
+    double cos = GRRMath.epsilonEquals(Math.cos(dtheta) - 1.0, 0.0)
+        ? 1.0 - ((1.0 / 12.0) * Math.pow(dtheta, 2.0))
+        : (-sin * Math.sin(dtheta)) / (Math.cos(dtheta) - 1.0);
+
+    double dt = 0.020;
+    double dx = chassisSpeeds.vxMetersPerSecond * dt;
+    double dy = chassisSpeeds.vyMetersPerSecond * dt;
+    chassisSpeeds =
+        new ChassisSpeeds(((dx * cos) - (dy * -sin)) / dt, ((dx * -sin) + (dy * cos)) / dt, chassisSpeeds.omegaRadiansPerSecond);
+        
+    lastTarget = targetController.calculate(lastTarget, chassisSpeeds);
+    SwerveModuleState[] targetStates = lastTarget.moduleStates;
     
     for (int i = 0; i < targetStates.length; i++) {
       SmartDashboard.putNumber("Target speed " + i, targetStates[i].speedMetersPerSecond);

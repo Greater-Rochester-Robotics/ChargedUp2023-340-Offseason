@@ -101,6 +101,7 @@ public class Intake extends SubsystemBase {
   public Command pickUpCube() {
     return setMotors(IntakeConstants.INTAKE_SPEED)
       .andThen(Commands.waitUntil(this::hasCube))
+      .andThen(Commands.waitSeconds(0.05))
       .andThen(setMotors(0.0));
   }
 }

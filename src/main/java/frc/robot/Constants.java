@@ -33,8 +33,8 @@ public class Constants {
         public static final double MINIMUM_DRIVE_SPEED = 0.01;// the slowest the wheels can turn, in m/s
         public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.05;// the slowest the wheels can turn, in duty cycle
         public static final double MOTOR_MAXIMUM_VELOCITY = 5.3;//4.33 5.19
-        public static final double PATH_MAXIMUM_VELOCITY = 3.5;
-        public static final double MAXIMUM_ACCELERATION = 1.25;
+        public static final double PATH_MAXIMUM_VELOCITY = 4.75;
+        public static final double MAXIMUM_ACCELERATION = 7.0; //TODO: get this
         public static final double MAX_ROBOT_ROT_VELOCITY = 3.5;
 
         // public static final double MAX_ROBOT_ROT_VELOCITY = MAXIMUM_VELOCITY / DISTANCE_TO_MODULE_0;
@@ -78,7 +78,7 @@ public class Constants {
         // public static final double DRIVE_HEADING_ERROR_CONTROLLER_P = 0; // 1.05
         // public static final double DRIVE_HEADING_ERROR_CONTROLLER_I = 0;
         // public static final double DRIVE_HEADING_ERROR_CONTROLLER_D = 0; // 0.02
-        public static final double DRIVE_ROTATION_CONTROLLER_P = 1.6*MOTOR_MAXIMUM_VELOCITY;//.1396;// 9
+        public static final double DRIVE_ROTATION_CONTROLLER_P = 5.5;//.1396;// 9
         public static final double DRIVE_ROTATION_CONTROLLER_I = 0.0;
         public static final double DRIVE_ROTATION_CONTROLLER_D = 0.01;
         public static final double DRIVE_MAX_ANGULAR_VELOCITY = 13.5;//10.8;//PathFollowing
@@ -138,14 +138,14 @@ public class Constants {
             public static final Arm.Position SHOOT_LOW = new Arm.Position(.435, 4.0);
             public static final Arm.Position SHOOT_MID = new Arm.Position(.435, 5.0);
             public static final Arm.Position SHOOT_HIGH = new Arm.Position(.435, 5.2);
-            public static final Arm.Position SHOOT_FAR = new Arm.Position(.63, 4.5);
+            public static final Arm.Position SHOOT_FAR = new Arm.Position(.63, 4.75);
         }
     }
     public static class IntakeConstants {
-        public static final double INTAKE_SPEED = 0.35;
+        public static final double INTAKE_SPEED = 0.2;
         public static final double SHOOT_SPEED_LOW = -0.1;
         public static final double SHOOT_SPEED_MID = -0.15;
-        public static final double SHOOT_SPEED_HIGH = -0.45;
+        public static final double SHOOT_SPEED_HIGH = -0.35;
         public static final double SHOOT_SPEED_FAR = -1.0;
     }
 

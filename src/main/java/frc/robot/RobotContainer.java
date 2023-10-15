@@ -5,6 +5,7 @@
 package frc.robot;
 
 import static frc.robot.commands.Routines.*;
+import static frc.robot.commands.Autos.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -97,6 +98,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
     //create(construct) subsystems
     swerveDrive = new SwerveDrive();
     arm = new Arm();
@@ -133,6 +135,7 @@ public class RobotContainer {
 
     /* ==================== DRIVER BUTTONS ==================== */
     driverA.onTrue(intake()).onFalse(storeCube());
+    driverB.onTrue(shootFar()).onFalse(storeCube());
     driverDLeft.onTrue(new DriveResetGyroToZero());
     driverBack.or(driverStart).toggleOnTrue(new DriveRobotCentric(true)); 
 
@@ -150,6 +153,10 @@ public class RobotContainer {
    */
   private void configureAutoModes() {
     autoChooser.setDefaultOption("Wait 1 sec(do nothing)", new WaitCommand(1));
+    autoChooser.addOption("Straight 2m", straight2Meters());
+    autoChooser.addOption("Straight 2m Turn", straight2MetersTurn());
+    autoChooser.addOption("Diagonal 1m", diagonal1Meter());
+    autoChooser.addOption("Five piece", fivePiece());
     SmartDashboard.putData(RobotContainer.autoChooser);
   }
 

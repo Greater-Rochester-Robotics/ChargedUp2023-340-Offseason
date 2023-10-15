@@ -24,7 +24,6 @@ public class Routines {
                 intake.pickUpCube(),
                 arm.setPosition(Positions.INTAKE)
             ),
-            waitSeconds(1.0),
             storeCube()
         );
     }

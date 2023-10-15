@@ -46,7 +46,7 @@ public class DriveFollowTrajectory extends CommandBase {
   }
 
   public DriveFollowTrajectory(String pathFileName, double maxVel, double maxAccel) {
-    this(pathFileName, maxVel, maxAccel, true);
+    this(pathFileName, maxVel, maxAccel, false);
   }
 
   public DriveFollowTrajectory(String pathFileName, double maxVel, double maxAccel, boolean resetOdometry) {
@@ -55,7 +55,7 @@ public class DriveFollowTrajectory extends CommandBase {
   }
 
   public DriveFollowTrajectory(PathPlannerTrajectory trajectory) {
-    this(trajectory, true);
+    this(trajectory, false);
   }
   
   public DriveFollowTrajectory(PathPlannerTrajectory trajectory, boolean resetOdometry) {
@@ -81,17 +81,17 @@ public class DriveFollowTrajectory extends CommandBase {
     timer.start();
 
     //TODO: When ready comment back in getAlliance
-    trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, Alliance.Blue);//DriverStation.getAlliance());
-
-    //poll the trajectory to find the first point
-    // PathPlannerState initialState = (PathPlannerState) trajectory.sample(0.0);
-    PathPlannerState initialState = trajectory.getInitialState();
+    trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
 
     //reset the PID controllers, zero the I error, etc.
     RobotContainer.swerveDrive.resetTrajectoryPIDControllers();
 
     //if we need to reset odometry...
     if(resetOdometry) {
+      //poll the trajectory to find the first point
+      // PathPlannerState initialState = (PathPlannerState) trajectory.sample(0.0);
+      PathPlannerState initialState = trajectory.getInitialState();
+
       //set the current position to the expected pose fromt he trajectory
       RobotContainer.swerveDrive.setCurPose2d(new Pose2d(initialState.poseMeters.getTranslation(),RobotContainer.swerveDrive.getGyroRotation2d()));
       // RobotContainer.swerveDrive.setGyro(initialState.holonomicRotation.getDegrees());//safer to use the DriveSetGyro command

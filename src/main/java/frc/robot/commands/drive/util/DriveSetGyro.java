@@ -13,6 +13,12 @@ public class DriveSetGyro extends InstantCommand {
   private double angle;
   IMUAxis axis;
 
+  /**
+   * Set the gyro's current angle to the input 
+   * param. CCW is positive.
+   * 
+   * @param angle an angle in DEGREES!!!
+   */
   public DriveSetGyro(double angle) {
     this(angle,IMUAxis.kYaw);
   }

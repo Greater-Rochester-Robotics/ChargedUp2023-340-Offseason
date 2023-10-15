@@ -141,6 +141,10 @@ public class Arm extends SubsystemBase {
     return wristEncoder.getPosition();
   }
 
+  private double getWristFeedForward() {
+    return 0.0;
+  }
+
   // Arm Commands
 
   public Command setPosition(Position position) {
@@ -153,7 +157,7 @@ public class Arm extends SubsystemBase {
       .onInitialize(() -> {})
       .onExecute(() -> {
         armController.setReference(position.getArm(), CANSparkMax.ControlType.kPosition);
-        wristController.setReference(position.getWrist(), CANSparkMax.ControlType.kPosition);
+        wristController.setReference(position.getWrist(), CANSparkMax.ControlType.kPosition, 0, getWristFeedForward());
 
         lastArmPosition = getArmPosition();
         lastWristPosition = getWristPosition();
@@ -178,7 +182,7 @@ public class Arm extends SubsystemBase {
       .onExecute(() -> {
         if(positionInitialized) {
           armController.setReference(lastArmPosition, CANSparkMax.ControlType.kPosition);
-          wristController.setReference(lastWristPosition, CANSparkMax.ControlType.kPosition);
+          wristController.setReference(lastWristPosition, CANSparkMax.ControlType.kPosition, 0, getWristFeedForward());
         }
       })
       .onEnd((interrupted) -> {
