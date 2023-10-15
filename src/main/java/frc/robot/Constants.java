@@ -21,7 +21,7 @@ public class Constants {
     public static final double MAXIMUM_VOLTAGE = 12.0;
 
     public static class SwerveDriveConstants {
-        /* Swerve Module Positions */ //TODO double check
+        /* Swerve Module Positions */
         public static final Translation2d FRONT_LEFT_POSITION = new Translation2d(0.219075,0.219075);//These are in meters
         public static final Translation2d REAR_LEFT_POSITION = new Translation2d(-0.219075,0.219075);
         public static final Translation2d REAR_RIGHT_POSITION = new Translation2d(-0.219075,-0.219075);
@@ -71,14 +71,11 @@ public class Constants {
         public static final double ROBOT_COUNTER_SPIN_I = 0.0;
         public static final double ROBOT_COUNTER_SPIN_D = 0.001;
 
-        /* We stole 3015's constants for DriveFollowTrajectory */
+        /* Path positional PID constants DriveFollowTrajectory */
         public static final double DRIVE_POS_ERROR_CONTROLLER_P = .33; // 10
         public static final double DRIVE_POS_ERROR_CONTROLLER_I = 0.001;
         public static final double DRIVE_POS_ERROR_CONTROLLER_D = 0.0;//0.05;
-        // public static final double DRIVE_HEADING_ERROR_CONTROLLER_P = 0; // 1.05
-        // public static final double DRIVE_HEADING_ERROR_CONTROLLER_I = 0;
-        // public static final double DRIVE_HEADING_ERROR_CONTROLLER_D = 0; // 0.02
-        public static final double DRIVE_ROTATION_CONTROLLER_P = 5.5;//.1396;// 9
+        public static final double DRIVE_ROTATION_CONTROLLER_P = 5.5;
         public static final double DRIVE_ROTATION_CONTROLLER_I = 0.0;
         public static final double DRIVE_ROTATION_CONTROLLER_D = 0.01;
         public static final double DRIVE_MAX_ANGULAR_VELOCITY = 13.5;//10.8;//PathFollowing
@@ -107,14 +104,21 @@ public class Constants {
 
         public static final double ARM_SPEED_UP = 0.2;
         public static final double ARM_SPEED_DOWN = -0.2;
-
-        public static final double WRIST_SPEED_UP = 0.2;
-        public static final double WRIST_SPEED_DOWN = -0.2;
-
+        
         public static final double ARM_P = 2.2;
         public static final double ARM_I = 0;
         public static final double ARM_D = 0;
         public static final double ARM_F = 0;
+
+        public static final double ARM_MAX_PID_OUTPUT = .2;
+
+        public static final double ARM_TOLERANCE = 0.05;
+
+        public static final double ARM_MAX = 0.635;
+        public static final double ARM_MIN = 0.43;
+
+        public static final double WRIST_SPEED_UP = 0.2;
+        public static final double WRIST_SPEED_DOWN = -0.2;
 
         public static final double WRIST_P = 1.4;
         public static final double WRIST_I = 0;
@@ -122,13 +126,9 @@ public class Constants {
         public static final double WRIST_F = 0;
 
         public static final double WRIST_MAX_PID_OUTPUT = .9;
-        public static final double ARM_MAX_PID_OUTPUT = .2;
 
-        public static final double ARM_TOLERANCE = 0.05;
         public static final double WRIST_TOLERANCE = 0.05;
 
-        public static final double ARM_MAX = 0.635;
-        public static final double ARM_MIN = 0.43;
         public static final double WRIST_MAX = 5.55;
         public static final double WRIST_MIN = 3.4;
 
@@ -138,7 +138,7 @@ public class Constants {
             public static final Arm.Position SHOOT_LOW = new Arm.Position(.435, 4.0);
             public static final Arm.Position SHOOT_MID = new Arm.Position(.435, 5.0);
             public static final Arm.Position SHOOT_HIGH = new Arm.Position(.435, 5.2);
-            public static final Arm.Position SHOOT_FAR = new Arm.Position(.63, 4.75);
+            public static final Arm.Position SHOOT_FAR = new Arm.Position(.63, 4.5);
         }
     }
     public static class IntakeConstants {

@@ -75,7 +75,8 @@ public class Autos {
                 )
             ),
             intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR + 0.1, IntakeConstants.SHOOT_SPEED_FAR),
-            waitSeconds(0.25),
+            waitSeconds(0.35),
+            intake.setMotors(0.0),
             parallel(
                 new DriveFollowTrajectory(path.get(1)),
                 sequence(
@@ -83,7 +84,33 @@ public class Autos {
                     arm.setPosition(Positions.SHOOT_FAR)
                 )
             ),
-            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR + 0.1, IntakeConstants.SHOOT_SPEED_FAR).withTimeout(0.25)
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR + 0.1, IntakeConstants.SHOOT_SPEED_FAR),
+            waitSeconds(0.35),
+            intake.setMotors(0.0),
+            parallel(
+                new DriveFollowTrajectory(path.get(2)),
+                sequence(
+                    intake().withTimeout(1.5),
+                    arm.setPosition(Positions.SHOOT_FAR)
+                )
+            ),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR + 0.1, IntakeConstants.SHOOT_SPEED_FAR),
+            waitSeconds(0.35),
+            intake.setMotors(0.0),
+            parallel(
+                new DriveFollowTrajectory(path.get(3)),
+                sequence(
+                    intake().withTimeout(1.5),
+                    arm.setPosition(Positions.SHOOT_FAR)
+                )
+            ),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR + 0.1, IntakeConstants.SHOOT_SPEED_FAR),
+            waitSeconds(0.35),
+            intake.setMotors(0.0),
+            parallel(
+                new DriveFollowTrajectory(path.get(4)),
+                storeCube()
+            )
         );
     }
 }

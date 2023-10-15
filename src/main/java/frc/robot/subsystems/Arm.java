@@ -122,6 +122,7 @@ public class Arm extends SubsystemBase {
     // if(smartDashboardDelay >= 50){
       SmartDashboard.putNumber("armEncoder", armEncoder.getPosition());
       SmartDashboard.putNumber("wristEncoder", wristEncoder.getPosition());
+      SmartDashboard.putNumber("wristCorrectedAngle", getWristCorrectedAngel());
       SmartDashboard.putNumber("applied wrist", wristMotor.getAppliedOutput());
       SmartDashboard.putNumber("applied arm", armMotor.getAppliedOutput());
       // smartDashboardDelay = 0;
@@ -143,6 +144,14 @@ public class Arm extends SubsystemBase {
 
   private double getWristFeedForward() {
     return 0.0;
+  }
+
+  /**
+   * returns the angel of the center of mass of the wrist with respect to the parallel of the ground
+   * @return
+   */
+  private double getWristCorrectedAngel(){
+    return wristEncoder.getPosition()+armEncoder.getPosition()-3.949;
   }
 
   // Arm Commands
