@@ -117,6 +117,9 @@ public class Constants {
         public static final double ARM_MAX = 0.635;
         public static final double ARM_MIN = 0.43;
 
+        public static final double ARM_MAX_MANUAL_DUTY_CYCLE = 0.3;
+        public static final double WRIST_MAX_MANUAL_DUTY_CYCLE = 0.3;
+
         public static final double WRIST_SPEED_UP = 0.2;
         public static final double WRIST_SPEED_DOWN = -0.2;
 

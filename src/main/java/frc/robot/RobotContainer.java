@@ -144,6 +144,10 @@ public class RobotContainer {
     coDriverB.onTrue(shootMid()).onFalse(storeCube());
     coDriverX.onTrue(shootHigh()).onFalse(storeCube());
     coDriverY.onTrue(shootFar()).onFalse(storeCube());
+
+    // coDriverLB.whileTrue(arm.setDutyCycle(() -> getArmManualSpeed(), 0));
+    // coDriverRB.whileTrue(arm.setDutyCycle(0, () -> getWristManualSpeed()));
+    // coDriverLB.and(coDriverRB).whileTrue(arm.setDutyCycle(() -> getArmManualSpeed(), getWristManualSpeed()))
   }
 
   /**
@@ -270,6 +274,22 @@ public class RobotContainer {
    */
   public boolean getCoDriverButton(int buttonNum) {
     return coDriver.getRawButton(buttonNum);
+  }
+
+  /**
+   * Gets the arm's manual speed from the co-driver's controller (left stick Y).
+   * @return The speed from -1.0 to 1.0, scaled to the max output.
+   */
+  public double getArmManualSpeed() {
+      return getCoDriverAxis(Axis.kLeftY) * Constants.ArmConstants.ARM_MAX_MANUAL_DUTY_CYCLE;
+  }
+
+  /**
+   * Gets the wrist's manual speed from the co-driver's controller (right stick Y).
+   * @return The speed from -1.0 to 1.0, scaled to the max output.
+   */
+  public double getWristManualSpeed() {
+      return getCoDriverAxis(Axis.kRightY) * Constants.ArmConstants.WRIST_MAX_MANUAL_DUTY_CYCLE;
   }
 
   public double getRobotForwardFull(boolean isVeloMode) {
