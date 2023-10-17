@@ -9,6 +9,7 @@ import static frc.robot.RobotContainer.*;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants.Positions;
 import frc.robot.subsystems.Arm.Position;
 
@@ -17,15 +18,26 @@ public class Routines {
     private Routines() {
         throw new UnsupportedOperationException("This is a utility class!");
     }
+    
+    public static Command intake(boolean waitForSensor) {
+        if(waitForSensor) {
+            return sequence(
+                deadline(
+                    intake.pickUpCube(waitForSensor),
+                    arm.setPosition(Positions.INTAKE)
+                ),
+                storeCube()
+            );
+        } else { 
+            return parallel(
+                intake.pickUpCube(waitForSensor),
+                arm.setPosition(Positions.INTAKE)
+            );
+        }
+    }
 
     public static Command intake() {
-        return sequence(
-            deadline(
-                intake.pickUpCube(),
-                arm.setPosition(Positions.INTAKE)
-            ),
-            storeCube()
-        );
+        return intake(false);
     }
 
     public static Command storeCube() {
@@ -62,6 +74,6 @@ public class Routines {
     }
 
     public static Command shootFar() {
-        return shoot(Positions.SHOOT_FAR, IntakeConstants.SHOOT_SPEED_FAR + 0.1, IntakeConstants.SHOOT_SPEED_FAR);
+        return shoot(Positions.SHOOT_FAR, IntakeConstants.SHOOT_SPEED_FAR, IntakeConstants.SHOOT_SPEED_FAR + 0.1);
     }
 }

@@ -38,9 +38,6 @@ import frc.robot.subsystems.swervelib.rev.SwerveRotationNEO;
  * https://docs.google.com/presentation/d/1feVl0L5lgIKSZhKCheWgWhkOydIu-ibgdp7oqA0yqAQ/edit?usp=sharing
  */
 public class SwerveDrive extends SubsystemBase {
-  /** Pose Estimator */
-  PoseEstimator poseEst;
-
   /** Motors */
   private static SwerveMoveNEO swerveMoveNEO[];
   private static SwerveRotationNEO swerveRotationNEO[];

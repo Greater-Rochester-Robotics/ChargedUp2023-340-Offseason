@@ -33,7 +33,7 @@ public class Constants {
         public static final double MINIMUM_DRIVE_SPEED = 0.01;// the slowest the wheels can turn, in m/s
         public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.05;// the slowest the wheels can turn, in duty cycle
         public static final double MOTOR_MAXIMUM_VELOCITY = 5.3;//4.33 5.19
-        public static final double PATH_MAXIMUM_VELOCITY = 4.75;
+        public static final double PATH_MAXIMUM_VELOCITY = 4.7;
         public static final double MAXIMUM_ACCELERATION = 7.0; //TODO: get this
         public static final double MAX_ROBOT_ROT_VELOCITY = 3.5;
 
@@ -81,12 +81,6 @@ public class Constants {
         public static final double DRIVE_MAX_ANGULAR_VELOCITY = 13.5;//10.8;//PathFollowing
         public static final double DRIVE_MAX_ANGULAR_ACCEL = 8.5;//7.03;//PathFollowing
         // public static final double DRIVE_ROTATION_MIN_VELOCITY = 25;
-
-        /* Driver Scaling Constants */
-        public static final double DRIVER_SPEED_SCALE_LINEAR = 0.65;
-        public static final double DRIVER_SPEED_SCALE_ROTATIONAL = .75;
-        public static final double DRIVER_ROT_SPEED_SCALE_EXPONENTIAL = 1.0;
-        public static final double DRIVER_PERCENT_ROT_SPEED_SCALE_LINEAR = 1.0;
 
         /* Aiming Values*/
         public static final Translation2d FIELD_CENTER = new Translation2d();
@@ -139,7 +133,7 @@ public class Constants {
             public static final Arm.Position INTAKE = new Arm.Position(.435, 3.45);
             public static final Arm.Position SAFE = new Arm.Position(.435, 5.5);
             public static final Arm.Position SHOOT_LOW = new Arm.Position(.435, 4.0);
-            public static final Arm.Position SHOOT_MID = new Arm.Position(.435, 5.0);
+            public static final Arm.Position SHOOT_MID = new Arm.Position(.435, 5.2);
             public static final Arm.Position SHOOT_HIGH = new Arm.Position(.435, 5.2);
             public static final Arm.Position SHOOT_FAR = new Arm.Position(.63, 4.5);
         }
@@ -147,7 +141,7 @@ public class Constants {
     public static class IntakeConstants {
         public static final double INTAKE_SPEED = 0.2;
         public static final double SHOOT_SPEED_LOW = -0.1;
-        public static final double SHOOT_SPEED_MID = -0.15;
+        public static final double SHOOT_SPEED_MID = -0.19;
         public static final double SHOOT_SPEED_HIGH = -0.35;
         public static final double SHOOT_SPEED_FAR = -1.0;
     }
@@ -182,5 +176,13 @@ public class Constants {
         public static final int REAR_LEFT_CAN_CODER = 5;
         public static final int REAR_RIGHT_CAN_CODER = 7;
         public static final int FRONT_RIGHT_CAN_CODER = 9;
+    }
+
+    public static class ControllerConstants {
+        public static final double CONTROLLER_DEADZONE = 0.15;
+        public static final double DRIVER_SPEED_SCALE_LINEAR = 0.75;
+        public static final double DRIVER_SPEED_SCALE_ROTATIONAL = .75;
+        public static final double DRIVER_ROT_SPEED_SCALE_EXPONENTIAL = 1.0;
+        public static final double DRIVER_PERCENT_ROT_SPEED_SCALE_LINEAR = 1.0;
     }
 }

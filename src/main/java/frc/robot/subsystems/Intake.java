@@ -84,7 +84,7 @@ public class Intake extends SubsystemBase {
 
     //----------Commands----------
 
-  public Command setMotors(double upperSpeed, double lowerSpeed) {
+  public CommandBuilder setMotors(double upperSpeed, double lowerSpeed) {
     return new CommandBuilder(this)
       .onInitialize(() -> {
           upperMotor.set(upperSpeed);
@@ -94,14 +94,24 @@ public class Intake extends SubsystemBase {
       .isFinished(true);
   }
 
-  public Command setMotors(double speed) {
+  public CommandBuilder setMotors(double speed) {
     return setMotors(speed, speed);
   }
 
-  public Command pickUpCube() {
+  public Command pickUpCube(boolean waitForSensor) {
     return setMotors(IntakeConstants.INTAKE_SPEED)
-      .andThen(Commands.waitUntil(this::hasCube))
+      .isFinished(()->waitForSensor ? this.hasCube() : false)
+      .onEnd((interrupted) -> {
+        if(interrupted) {
+          upperMotor.set(0.0);
+          lowerMotor.set(0.0);
+        }
+      })
       .andThen(Commands.waitSeconds(0.05))
       .andThen(setMotors(0.0));
+  }
+
+  public Command pickUpCube() {
+    return pickUpCube(false);
   }
 }

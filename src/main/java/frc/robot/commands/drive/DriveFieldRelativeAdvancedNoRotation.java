@@ -57,8 +57,8 @@ public class DriveFieldRelativeAdvancedNoRotation extends CommandBase {
     }
   
     RobotContainer.swerveDrive.driveFieldRelative(
-      awaySpeed*-Constants.SwerveDriveConstants.DRIVER_SPEED_SCALE_LINEAR,
-      lateralSpeed*-Constants.SwerveDriveConstants.DRIVER_SPEED_SCALE_LINEAR,
+      awaySpeed*-Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR,
+      lateralSpeed*-Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR,
       RobotContainer.swerveDrive.getCounterRotationPIDOut(currentAngle),
       isVeloMode
     );

@@ -48,9 +48,9 @@ public class DriveFieldRelativeVelocity extends CommandBase {
 
 
     RobotContainer.swerveDrive.driveFieldRelative(
-      awaySpeed*-Constants.SwerveDriveConstants.DRIVER_SPEED_SCALE_LINEAR*Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY,
-      lateralSpeed*-Constants.SwerveDriveConstants.DRIVER_SPEED_SCALE_LINEAR*Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY,
-      rotSpeed*-Constants.SwerveDriveConstants.DRIVER_SPEED_SCALE_ROTATIONAL*Constants.SwerveDriveConstants.MAX_ROBOT_ROT_VELOCITY, 
+      awaySpeed*-Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR*Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY,
+      lateralSpeed*-Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR*Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY,
+      rotSpeed*-Constants.ControllerConstants.DRIVER_SPEED_SCALE_ROTATIONAL*Constants.SwerveDriveConstants.MAX_ROBOT_ROT_VELOCITY, 
       true
     );
   }

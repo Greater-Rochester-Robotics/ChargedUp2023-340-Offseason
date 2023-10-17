@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -57,7 +58,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     //set a timer so we can reset things a few seconds into disabled
-
+    RobotContainer.arm.setWristBrake(false);
   }
 
   @Override
@@ -73,6 +74,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+    RobotContainer.arm.setWristBrake(true);
   }
 
   /** This function is called periodically during autonomous. */
@@ -88,6 +90,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    RobotContainer.arm.setWristBrake(true);
   }
 
   /** This function is called periodically during operator control. */

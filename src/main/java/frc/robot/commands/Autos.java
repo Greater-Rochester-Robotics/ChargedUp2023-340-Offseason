@@ -70,7 +70,7 @@ public class Autos {
                 new DriveFollowTrajectory(path.get(0), true),
                 sequence(
                     waitSeconds(1.0),
-                    intake().withTimeout(1.5),
+                    intake(true).withTimeout(1.5),
                     arm.setPosition(Positions.SHOOT_FAR)
                 )
             ),
@@ -80,7 +80,7 @@ public class Autos {
             parallel(
                 new DriveFollowTrajectory(path.get(1)),
                 sequence(
-                    intake().withTimeout(1.5),
+                    intake(true).withTimeout(1.5),
                     arm.setPosition(Positions.SHOOT_FAR)
                 )
             ),
@@ -90,7 +90,7 @@ public class Autos {
             parallel(
                 new DriveFollowTrajectory(path.get(2)),
                 sequence(
-                    intake().withTimeout(1.5),
+                    intake(true).withTimeout(1.5),
                     arm.setPosition(Positions.SHOOT_FAR)
                 )
             ),
@@ -100,7 +100,7 @@ public class Autos {
             parallel(
                 new DriveFollowTrajectory(path.get(3)),
                 sequence(
-                    intake().withTimeout(1.5),
+                    intake(true).withTimeout(1.5),
                     arm.setPosition(Positions.SHOOT_FAR)
                 )
             ),

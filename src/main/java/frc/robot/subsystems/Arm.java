@@ -130,6 +130,10 @@ public class Arm extends SubsystemBase {
 
   }
 
+  public void setWristBrake(boolean isBrakeMode) {
+    wristMotor.setIdleMode(isBrakeMode ? IdleMode.kBrake : IdleMode.kCoast);
+  }
+
   // arm methods
 
   public double getArmPosition() {
