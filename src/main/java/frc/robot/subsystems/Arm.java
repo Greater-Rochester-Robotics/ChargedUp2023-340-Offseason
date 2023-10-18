@@ -147,7 +147,7 @@ public class Arm extends SubsystemBase {
   }
 
   private double getWristFeedForward() {
-    return 0.0;
+    return Math.cos(getWristCorrectedAngle()) * ArmConstants.WRIST_GRAV_FF;
   }
 
   /**

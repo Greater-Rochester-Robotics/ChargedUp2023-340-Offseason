@@ -5,6 +5,7 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 /**
@@ -37,6 +38,8 @@ public class DriveLockWheels extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(Robot.robotContainer.getRobotForwardFull(false)) > .075 ||
+      Math.abs(Robot.robotContainer.getRobotLateralFull(false)) > .075 ||
+      Math.abs(Robot.robotContainer.getRobotRotation(false)) > .075 ;
   }
 }

@@ -33,8 +33,7 @@ public class Constants {
         public static final double MINIMUM_DRIVE_SPEED = 0.01;// the slowest the wheels can turn, in m/s
         public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.05;// the slowest the wheels can turn, in duty cycle
         public static final double MOTOR_MAXIMUM_VELOCITY = 5.3;//4.33 5.19
-        public static final double PATH_MAXIMUM_VELOCITY = 4.7;
-        public static final double MAXIMUM_ACCELERATION = 7.0; //TODO: get this
+         //TODO: get this
         public static final double MAX_ROBOT_ROT_VELOCITY = 3.5;
 
         // public static final double MAX_ROBOT_ROT_VELOCITY = MAXIMUM_VELOCITY / DISTANCE_TO_MODULE_0;
@@ -73,14 +72,16 @@ public class Constants {
 
         /* Path positional PID constants DriveFollowTrajectory */
         public static final double DRIVE_POS_ERROR_CONTROLLER_P = .33; // 10
-        public static final double DRIVE_POS_ERROR_CONTROLLER_I = 0.001;
+        public static final double DRIVE_POS_ERROR_CONTROLLER_I = 0.0005;
         public static final double DRIVE_POS_ERROR_CONTROLLER_D = 0.0;//0.05;
-        public static final double DRIVE_ROTATION_CONTROLLER_P = 5.5;
+        public static final double DRIVE_ROTATION_CONTROLLER_P = 1.50;
         public static final double DRIVE_ROTATION_CONTROLLER_I = 0.0;
         public static final double DRIVE_ROTATION_CONTROLLER_D = 0.01;
-        public static final double DRIVE_MAX_ANGULAR_VELOCITY = 13.5;//10.8;//PathFollowing
-        public static final double DRIVE_MAX_ANGULAR_ACCEL = 8.5;//7.03;//PathFollowing
+        // public static final double DRIVE_MAX_ANGULAR_VELOCITY = 13.5;//10.8;//PathFollowing
+        // public static final double DRIVE_MAX_ANGULAR_ACCEL = 8.5;//7.03;//PathFollowing
         // public static final double DRIVE_ROTATION_MIN_VELOCITY = 25;
+        public static final double PATH_MAXIMUM_VELOCITY = 4.0;
+        public static final double PATH_MAXIMUM_ACCELERATION = 5.0;
 
         /* Aiming Values*/
         public static final Translation2d FIELD_CENTER = new Translation2d();
@@ -89,7 +90,7 @@ public class Constants {
         public static final double DRIVE_BALANCE_ROBOT_VELOCITY_TOLERANCE = 7;
         public static final double DRIVE_BALANCE_ROBOT_ANGLE_TOLERANCE = 3;
         public static final double DRIVE_BALANCE_ROBOT_ANGLE_TOLERANCE_AUTO = 13;
-        public static final double DRIVE_BALANCE_ROBOT_MAX_SPEED = 0.11;
+        public static final double DRIVE_BALANCE_ROBOT_MAX_SPEED = 0.10;
     }
 
     public static class ArmConstants {
@@ -119,8 +120,9 @@ public class Constants {
 
         public static final double WRIST_P = 1.4;
         public static final double WRIST_I = 0;
-        public static final double WRIST_D = 0;
+        public static final double WRIST_D = 0.0;
         public static final double WRIST_F = 0;
+        public static final double WRIST_GRAV_FF = 0.0;//.12;
 
         public static final double WRIST_MAX_PID_OUTPUT = .9;
 

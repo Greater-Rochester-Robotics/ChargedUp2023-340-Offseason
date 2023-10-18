@@ -35,7 +35,7 @@ public class DriveStraightBack extends CommandBase {
     timer = new Timer();
     //makes a PID controler and initializes constraints, a goal position and an initial position
     backController = new PIDController(Constants.SwerveDriveConstants.DRIVE_POS_ERROR_CONTROLLER_P, Constants.SwerveDriveConstants.DRIVE_POS_ERROR_CONTROLLER_I, Constants.SwerveDriveConstants.DRIVE_POS_ERROR_CONTROLLER_D);
-    TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(Constants.SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, Constants.SwerveDriveConstants.MAXIMUM_ACCELERATION);
+    TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(Constants.SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, Constants.SwerveDriveConstants.PATH_MAXIMUM_ACCELERATION);
     TrapezoidProfile.State goal = new TrapezoidProfile.State(distance, 0);
     TrapezoidProfile.State initial = new TrapezoidProfile.State(0, 0);
     //Constructs a TrapezoidProfile

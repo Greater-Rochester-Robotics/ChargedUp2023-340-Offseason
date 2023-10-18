@@ -4,16 +4,8 @@
 
 package frc.robot;
 
-import static frc.robot.commands.Autos.diagonal1Meter;
-import static frc.robot.commands.Autos.fivePiece;
-import static frc.robot.commands.Autos.straight2Meters;
-import static frc.robot.commands.Autos.straight2MetersTurn;
-import static frc.robot.commands.Routines.intake;
-import static frc.robot.commands.Routines.shootFar;
-import static frc.robot.commands.Routines.shootHigh;
-import static frc.robot.commands.Routines.shootLow;
-import static frc.robot.commands.Routines.shootMid;
-import static frc.robot.commands.Routines.storeCube;
+import static frc.robot.commands.Autos.*;
+import static frc.robot.commands.Routines.*;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -28,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants.Positions;
+import frc.robot.commands.drive.DriveBalanceRobot;
 import frc.robot.commands.drive.DriveFieldRelative;
 import frc.robot.commands.drive.DriveLockWheels;
 import frc.robot.commands.drive.DriveRobotCentric;
@@ -73,8 +66,8 @@ public class RobotContainer {
   static final Trigger driverDDown = new POVButton(driver, 180);
   static final Trigger driverDLeft = new POVButton(driver, 270);
   static final Trigger driverDRight = new POVButton(driver, 90);
-  // final Trigger driverLTButton = new JoyTriggerButton(driver, .3, Axis.LEFT_TRIGGER);//This is used in driving, don't enable
-  // final Trigger driverRTButton = new JoyTriggerButton(driver, .3, Axis.RIGHT_TRIGGER);//This is used in driving, don't enable
+  final Trigger driverLTButton = new JoyTriggerButton(driver, .05, Axis.kLeftTrigger);//This is used in driving, don't enable
+  final Trigger driverRTButton = new JoyTriggerButton(driver, .05, Axis.kRightTrigger);//This is used in driving, don't enable
 
   ///////////////////////
   // CO-DRIVER BUTTONS //
@@ -151,6 +144,7 @@ public class RobotContainer {
     driverB.onTrue(scoreTarget.getShootCommand()).onFalse(intake.setMotors(0.0));
     driverDLeft.onTrue(new DriveResetGyroToZero());
     driverBack.or(driverStart).toggleOnTrue(new DriveRobotCentric(true)); 
+    driverRB.and(driverRTButton.negate()).whileTrue(new DriveBalanceRobot(true)).onFalse(new DriveLockWheels());
 
     /* =================== CODRIVER BUTTONS =================== */
     coDriverA.onTrue(sequence(scoreTarget.setLevel(Level.LOW), scoreTarget.getArmCommand())).onFalse(arm.setPosition(Positions.SAFE));
@@ -158,9 +152,9 @@ public class RobotContainer {
     coDriverX.onTrue(sequence(scoreTarget.setLevel(Level.HIGH), scoreTarget.getArmCommand())).onFalse(arm.setPosition(Positions.SAFE));
     coDriverY.onTrue(sequence(scoreTarget.setLevel(Level.FAR), scoreTarget.getArmCommand())).onFalse(arm.setPosition(Positions.SAFE));
 
-    // coDriverLB.whileTrue(arm.setDutyCycle(() -> getArmManualSpeed(), 0));
-    // coDriverRB.whileTrue(arm.setDutyCycle(0, () -> getWristManualSpeed()));
-    // coDriverLB.and(coDriverRB).whileTrue(arm.setDutyCycle(() -> getArmManualSpeed(), getWristManualSpeed()))
+    coDriverLB.whileTrue(arm.setDutyCycle(() -> getArmManualSpeed(), () -> 0.0));
+    coDriverRB.whileTrue(arm.setDutyCycle(() -> 0.0, () -> getWristManualSpeed()));
+    coDriverLB.and(coDriverRB).whileTrue(arm.setDutyCycle(() -> getArmManualSpeed(), () -> getWristManualSpeed()));
   }
 
   /**
@@ -174,6 +168,7 @@ public class RobotContainer {
     autoChooser.addOption("Straight 2m Turn", straight2MetersTurn());
     autoChooser.addOption("Diagonal 1m", diagonal1Meter());
     autoChooser.addOption("Five piece", fivePiece());
+    autoChooser.addOption("Bump 2 piece", bump2Piece());
     SmartDashboard.putData(RobotContainer.autoChooser);
   }
 

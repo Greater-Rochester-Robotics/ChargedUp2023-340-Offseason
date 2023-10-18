@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmConstants.Positions;
+import frc.robot.commands.drive.DriveBalanceRobot;
 import frc.robot.commands.drive.auto.DriveFollowTrajectory;
 import frc.robot.commands.drive.util.DriveResetGyroToZero;
 import frc.robot.commands.drive.util.DriveSetGyro;
@@ -37,7 +38,7 @@ public class Autos {
     }
 
     public static Command straight2Meters() {
-        var path = PathPlanner.loadPathGroup("Straight2m", SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, SwerveDriveConstants.MAXIMUM_ACCELERATION);
+        var path = PathPlanner.loadPathGroup("Straight2m", SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, SwerveDriveConstants.PATH_MAXIMUM_ACCELERATION);
         return sequence(
             new DriveResetGyroToZero(),
             new DriveFollowTrajectory(path.get(0), true)
@@ -45,7 +46,7 @@ public class Autos {
     }
 
     public static Command straight2MetersTurn() {
-        var path = PathPlanner.loadPathGroup("Straight2mTurn", SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, SwerveDriveConstants.MAXIMUM_ACCELERATION);
+        var path = PathPlanner.loadPathGroup("Straight2mTurn", SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, SwerveDriveConstants.PATH_MAXIMUM_ACCELERATION);
         return sequence(
             new DriveResetGyroToZero(),
             new DriveFollowTrajectory(path.get(0), true)
@@ -53,16 +54,35 @@ public class Autos {
     }
 
     public static Command diagonal1Meter() {
-        var path = PathPlanner.loadPathGroup("Diagonal1m", SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, SwerveDriveConstants.MAXIMUM_ACCELERATION);
+        var path = PathPlanner.loadPathGroup("Diagonal1m", SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, SwerveDriveConstants.PATH_MAXIMUM_ACCELERATION);
         return sequence(
             new DriveResetGyroToZero(),
             new DriveFollowTrajectory(path.get(0), true)
         );
     }
 
+    public static Command bump2Piece() {
+        List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup("Bump2Piece", SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, SwerveDriveConstants.PATH_MAXIMUM_ACCELERATION);
+        return sequence(
+            new DriveSetGyro(180),
+            shootFar().withTimeout(0.7),
+            deadline(
+                sequence(
+                    new DriveFollowTrajectory(path.get(0), true),
+                    waitSeconds(1.0),
+                    new DriveFollowTrajectory(path.get(1))
+                ),
+                intake(true)
+            ),
+            shootFar(),
+            new DriveFollowTrajectory(path.get(2)),
+            new DriveBalanceRobot()
+        );
+    }
+
     public static Command fivePiece() {
-        List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup("5Piece", SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, SwerveDriveConstants.MAXIMUM_ACCELERATION);
-        System.out.println(path.size());
+        List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup("5Piece", SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, SwerveDriveConstants.PATH_MAXIMUM_ACCELERATION);
+        // System.out.println(path.size());
         return sequence(
             new DriveSetGyro(180),
             shootHigh().withTimeout(0.7),
