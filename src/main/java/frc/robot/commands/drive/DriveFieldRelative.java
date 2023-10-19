@@ -44,14 +44,14 @@ public class DriveFieldRelative extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double  awaySpeed = Robot.robotContainer.getRobotForwardFull(isVeloMode);
-    double lateralSpeed = Robot.robotContainer.getRobotLateralFull(isVeloMode);
+    double  awaySpeed = Robot.robotContainer.getRobotForward(isVeloMode, false);
+    double lateralSpeed = Robot.robotContainer.getRobotLateral(isVeloMode, false);
     //check if secondary sticks are being used
     if(Math.abs(Robot.robotContainer.getDriverAxis(Axis.kRightY))>.1 ||
      Math.abs(Robot.robotContainer.getDriverAxis(Axis.kRightX))>.1){
      //if secondary sticks used, replace with secondary sticks witha slow factor
-     awaySpeed = Robot.robotContainer.getRobotForwardSlow(isVeloMode);
-     lateralSpeed = Robot.robotContainer.getRobotLateralSlow(isVeloMode);
+     awaySpeed = Robot.robotContainer.getRobotForward(isVeloMode, true);
+     lateralSpeed = Robot.robotContainer.getRobotLateral(isVeloMode, true);
     }
     double rotSpeed = Robot.robotContainer.getRobotRotation(isVeloMode);
 

@@ -16,14 +16,12 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmConstants.Positions;
 import frc.robot.commands.drive.DriveBalanceRobot;
 import frc.robot.commands.drive.auto.DriveFollowTrajectory;
 import frc.robot.commands.drive.util.DriveResetGyroToZero;
 import frc.robot.commands.drive.util.DriveSetGyro;
-import frc.robot.subsystems.Arm;
 
 /** Add your docs here. */
 public class Autos {
@@ -65,16 +63,22 @@ public class Autos {
         List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup("Bump2Piece", SwerveDriveConstants.PATH_MAXIMUM_VELOCITY, SwerveDriveConstants.PATH_MAXIMUM_ACCELERATION);
         return sequence(
             new DriveSetGyro(180),
-            shootFar().withTimeout(0.7),
+            arm.setPosition(Positions.SHOOT_FAR).withTimeout(0.4),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR_UPPER, IntakeConstants.SHOOT_SPEED_FAR_LOWER, IntakeConstants.SHOOT_SPEED_INNER),
+            waitSeconds(0.2),
+            intake.stopMotors(),
             deadline(
                 sequence(
                     new DriveFollowTrajectory(path.get(0), true),
                     waitSeconds(1.0),
                     new DriveFollowTrajectory(path.get(1))
                 ),
-                intake(true)
+                intake()
             ),
-            shootFar(),
+            arm.setPosition(Positions.SHOOT_FAR).withTimeout(0.4),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR_UPPER, IntakeConstants.SHOOT_SPEED_FAR_LOWER, IntakeConstants.SHOOT_SPEED_INNER),
+            waitSeconds(0.2),
+            intake.stopMotors(),
             new DriveFollowTrajectory(path.get(2)),
             new DriveBalanceRobot()
         );
@@ -85,48 +89,49 @@ public class Autos {
         // System.out.println(path.size());
         return sequence(
             new DriveSetGyro(180),
-            shootHigh().withTimeout(0.7),
+            arm.setPosition(Positions.SHOOT_HIGH).withTimeout(0.4),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_HIGH, IntakeConstants.SHOOT_SPEED_INNER),
             parallel(
                 new DriveFollowTrajectory(path.get(0), true),
                 sequence(
                     waitSeconds(1.0),
-                    intake(true).withTimeout(1.5),
+                    intake().withTimeout(1.5),
                     arm.setPosition(Positions.SHOOT_FAR)
                 )
             ),
-            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR + 0.1, IntakeConstants.SHOOT_SPEED_FAR),
-            waitSeconds(0.35),
-            intake.setMotors(0.0),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR_UPPER, IntakeConstants.SHOOT_SPEED_FAR_LOWER, IntakeConstants.SHOOT_SPEED_INNER),
+            waitSeconds(0.2),
+            intake.stopMotors(),
             parallel(
                 new DriveFollowTrajectory(path.get(1)),
                 sequence(
-                    intake(true).withTimeout(1.5),
+                    intake().withTimeout(1.5),
                     arm.setPosition(Positions.SHOOT_FAR)
                 )
             ),
-            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR + 0.1, IntakeConstants.SHOOT_SPEED_FAR),
-            waitSeconds(0.35),
-            intake.setMotors(0.0),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR_UPPER, IntakeConstants.SHOOT_SPEED_FAR_LOWER, IntakeConstants.SHOOT_SPEED_INNER),
+            waitSeconds(0.2),
+            intake.stopMotors(),
             parallel(
                 new DriveFollowTrajectory(path.get(2)),
                 sequence(
-                    intake(true).withTimeout(1.5),
+                    intake().withTimeout(1.5),
                     arm.setPosition(Positions.SHOOT_FAR)
                 )
             ),
-            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR + 0.1, IntakeConstants.SHOOT_SPEED_FAR),
-            waitSeconds(0.35),
-            intake.setMotors(0.0),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR_UPPER, IntakeConstants.SHOOT_SPEED_FAR_LOWER, IntakeConstants.SHOOT_SPEED_INNER),
+            waitSeconds(0.2),
+            intake.stopMotors(),
             parallel(
                 new DriveFollowTrajectory(path.get(3)),
                 sequence(
-                    intake(true).withTimeout(1.5),
+                    intake().withTimeout(1.5),
                     arm.setPosition(Positions.SHOOT_FAR)
                 )
             ),
-            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR + 0.1, IntakeConstants.SHOOT_SPEED_FAR),
-            waitSeconds(0.35),
-            intake.setMotors(0.0),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAR_UPPER, IntakeConstants.SHOOT_SPEED_FAR_LOWER, IntakeConstants.SHOOT_SPEED_INNER),
+            waitSeconds(0.2),
+            intake.stopMotors(),
             parallel(
                 new DriveFollowTrajectory(path.get(4)),
                 storeCube()

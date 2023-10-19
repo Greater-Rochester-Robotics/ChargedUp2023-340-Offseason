@@ -8,22 +8,17 @@ import java.util.function.Supplier;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.revrobotics.SparkMaxPIDController;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.CommandBuilder;
@@ -47,7 +42,6 @@ public class Arm extends SubsystemBase {
     armEncoder = armMotor.getAbsoluteEncoder(Type.kDutyCycle);
     armController = armMotor.getPIDController();
 
-    // TODO: put correct settings
     // Arm motor settings.
     armMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
     armMotor.setInverted(false);
@@ -72,7 +66,6 @@ public class Arm extends SubsystemBase {
 
     armController.setOutputRange(-ArmConstants.ARM_MAX_PID_OUTPUT, ArmConstants.ARM_MAX_PID_OUTPUT);
 
-
     armController.setFeedbackDevice(armEncoder);
     armController.setP(ArmConstants.ARM_P);
     armController.setI(ArmConstants.ARM_I);
@@ -87,7 +80,6 @@ public class Arm extends SubsystemBase {
     wristMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
     wristMotor.setInverted(false);
     wristMotor.setIdleMode(IdleMode.kBrake);
-    // wristMotor.setClosedLoopRampRate(1);
     
     // Wrist frame settings.
     wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
@@ -101,7 +93,7 @@ public class Arm extends SubsystemBase {
     // Wrist encoder settings
     wristEncoder.setPositionConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR);
     wristEncoder.setVelocityConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR / 60);
-    wristEncoder.setZeroOffset(6.51177-Constants.TWO_PI);
+    wristEncoder.setZeroOffset(0.197244179);
 
     wristController.setFeedbackDevice(wristEncoder);
     wristController.setP(ArmConstants.WRIST_P);    
@@ -147,7 +139,7 @@ public class Arm extends SubsystemBase {
   }
 
   private double getWristFeedForward() {
-    return Math.cos(getWristCorrectedAngle()) * ArmConstants.WRIST_GRAV_FF;
+    return 0.0; // Math.cos(getWristCorrectedAngle()) * ArmConstants.WRIST_GRAV_FF;
   }
 
   /**

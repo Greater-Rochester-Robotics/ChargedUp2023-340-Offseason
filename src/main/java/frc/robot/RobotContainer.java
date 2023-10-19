@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ArmConstants.Positions;
 import frc.robot.commands.drive.DriveBalanceRobot;
 import frc.robot.commands.drive.DriveFieldRelative;
@@ -140,17 +141,17 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(new DriveFieldRelative(true));
 
     /* ==================== DRIVER BUTTONS ==================== */
-    driverA.onTrue(intake()).onFalse(storeCube());
-    driverB.onTrue(scoreTarget.getShootCommand()).onFalse(intake.setMotors(0.0));
+    driverA.onTrue(intake(false)).onFalse(storeCube());
+    driverB.onTrue(scoreTarget.getDriverCommand()).onFalse(intake.stopMotors());
     driverDLeft.onTrue(new DriveResetGyroToZero());
     driverBack.or(driverStart).toggleOnTrue(new DriveRobotCentric(true)); 
     driverRB.and(driverRTButton.negate()).whileTrue(new DriveBalanceRobot(true)).onFalse(new DriveLockWheels());
 
     /* =================== CODRIVER BUTTONS =================== */
-    coDriverA.onTrue(sequence(scoreTarget.setLevel(Level.LOW), scoreTarget.getArmCommand())).onFalse(arm.setPosition(Positions.SAFE));
-    coDriverB.onTrue(sequence(scoreTarget.setLevel(Level.MID), scoreTarget.getArmCommand())).onFalse(arm.setPosition(Positions.SAFE));
-    coDriverX.onTrue(sequence(scoreTarget.setLevel(Level.HIGH), scoreTarget.getArmCommand())).onFalse(arm.setPosition(Positions.SAFE));
-    coDriverY.onTrue(sequence(scoreTarget.setLevel(Level.FAR), scoreTarget.getArmCommand())).onFalse(arm.setPosition(Positions.SAFE));
+    coDriverA.onTrue(sequence(scoreTarget.setLevel(Level.LOW), scoreTarget.getCoDriverCommand())).onFalse(arm.setPosition(Positions.SAFE));
+    coDriverB.onTrue(sequence(scoreTarget.setLevel(Level.MID), scoreTarget.getCoDriverCommand())).onFalse(arm.setPosition(Positions.SAFE));
+    coDriverX.onTrue(sequence(scoreTarget.setLevel(Level.HIGH), scoreTarget.getCoDriverCommand())).onFalse(arm.setPosition(Positions.SAFE));
+    coDriverY.onTrue(sequence(scoreTarget.setLevel(Level.FAR), scoreTarget.getCoDriverCommand())).onFalse(arm.setPosition(Positions.SAFE));
 
     coDriverLB.whileTrue(arm.setDutyCycle(() -> getArmManualSpeed(), () -> 0.0));
     coDriverRB.whileTrue(arm.setDutyCycle(() -> 0.0, () -> getWristManualSpeed()));
@@ -302,34 +303,22 @@ public class RobotContainer {
 
   public double getRobotForward(boolean isVeloMode, boolean isSlowMode) {
     double raw = this.getDriverAxis(Axis.kLeftY);
-    double norm = Math.hypot(this.getDriverAxis(Axis.kLeftX), raw);
-    double normExp = Math.pow(norm, 2.0);
-    if(normExp == 0.0) return 0.0;
-    return Math.pow(raw, 2.0) * -Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR * (isVeloMode ? Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY : 1.0) * (isSlowMode ? 0.5 : 1.0);
+    if(raw == 0.0) return raw;
+    return raw
+      * Math.pow(Math.hypot(this.getDriverAxis(Axis.kLeftX), raw), ControllerConstants.DRIVER_ROT_SPEED_SCALE_EXPONENTIAL - 1.0)
+      * -Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR
+      * (isVeloMode ? Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY : 1.0)
+      * (isSlowMode ? 0.5 : 1.0);
   }
 
   public double getRobotLateral(boolean isVeloMode, boolean isSlowMode) {
     double raw = this.getDriverAxis(Axis.kLeftX);
-    double norm = Math.hypot(this.getDriverAxis(Axis.kLeftY), raw);
-    double normExp = Math.pow(norm, 2.0);
-    if(normExp == 0.0) return 0.0;
-    return Math.pow(raw, 2.0) * -Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR * (isVeloMode ? Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY : 1.0) * (isSlowMode ? 0.5 : 1.0);
-  }
-
-  public double getRobotForwardFull(boolean isVeloMode) {
-    return this.getDriverAxis(Axis.kLeftY) * -Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR * (isVeloMode? Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY : 1.0);
-  }
-
-  public double getRobotForwardSlow(boolean isVeloMode) {
-    return this.getDriverAxis(Axis.kRightY) * 0.5 * -Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR * (isVeloMode? Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY : 1.0);
-  }
-
-  public double getRobotLateralFull(boolean isVeloMode) {
-    return this.getDriverAxis(Axis.kLeftX) * -Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR * (isVeloMode? Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY : 1.0);
-  }
-
-  public double getRobotLateralSlow(boolean isVeloMode) {
-    return this.getDriverAxis(Axis.kRightX) * 0.5 * -Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR * (isVeloMode? Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY : 1.0);
+    if (raw == 0.0) return raw;
+    return raw
+      * Math.pow(Math.hypot(this.getDriverAxis(Axis.kLeftY), raw), ControllerConstants.DRIVER_ROT_SPEED_SCALE_EXPONENTIAL - 1.0)
+      * -Constants.ControllerConstants.DRIVER_SPEED_SCALE_LINEAR
+      * (isVeloMode ? Constants.SwerveDriveConstants.MOTOR_MAXIMUM_VELOCITY : 1.0)
+      * (isSlowMode ? 0.5 : 1.0);
   }
 
   /**

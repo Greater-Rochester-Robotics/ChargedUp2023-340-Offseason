@@ -47,14 +47,14 @@ public class DriveRobotCentric extends CommandBase {
   public void execute() {
     RobotContainer.setDriverRumble(0.25, 0.25);
     //pull primary stick values, and put to awaySpeed and lateralSpeed doubles
-    double forwardSpeed = Robot.robotContainer.getRobotForwardFull(isVeloMode);
-    double strafeSpeed = Robot.robotContainer.getRobotLateralFull(isVeloMode);
+    double forwardSpeed = Robot.robotContainer.getRobotForward(isVeloMode, false);
+    double strafeSpeed = Robot.robotContainer.getRobotLateral(isVeloMode, false);
     //check if secondary sticks are being used
     if(Math.abs(Robot.robotContainer.getDriverAxis(Axis.kRightY))>.1 ||
       Math.abs(Robot.robotContainer.getDriverAxis(Axis.kRightX))>.1){
       //if secondary sticks used, replace with secondary sticks witha slow factor
-      forwardSpeed = Robot.robotContainer.getRobotForwardSlow(isVeloMode);
-      strafeSpeed = Robot.robotContainer.getRobotLateralSlow(isVeloMode);
+      forwardSpeed = Robot.robotContainer.getRobotForward(isVeloMode, true);
+      strafeSpeed = Robot.robotContainer.getRobotLateral(isVeloMode, true);
     }
     //create rotation speed from gamepad triggers
     double rotSpeed = Robot.robotContainer.getRobotRotation(isVeloMode);
