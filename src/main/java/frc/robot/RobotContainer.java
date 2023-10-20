@@ -142,12 +142,12 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(new DriveFieldRelative(true));
 
     /* ==================== DRIVER BUTTONS ==================== */
-    driverA.onTrue(intake(false)).onFalse(storeCube());
+    driverA.onTrue(intake(true)).onFalse(storeCube());
     driverB.onTrue(scoreTarget.getDriverCommand()).onFalse(intake.stopMotors());
     driverX.onTrue(intake.setMotors(IntakeConstants.OUTER_INTAKE_SPEED, IntakeConstants.INNER_INTAKE_SPEED)).onFalse(intake.stopMotors());
     driverDLeft.onTrue(new DriveResetGyroToZero());
     driverBack.or(driverStart).toggleOnTrue(new DriveRobotCentric(true)); 
-    driverRB.and(driverRTButton.negate()).whileTrue(new DriveBalanceRobot(true)).onFalse(new DriveLockWheels());
+    driverRB.and(driverRTButton.negate()).whileTrue(new DriveBalanceRobot()).onFalse(run(swerveDrive::driveX).until(this::driverMoving));
 
     /* =================== CODRIVER BUTTONS =================== */
     coDriverA.onTrue(sequence(scoreTarget.setLevel(Level.LOW), scoreTarget.getCoDriverCommand())).onFalse(arm.setPosition(Positions.SAFE));
@@ -167,11 +167,17 @@ public class RobotContainer {
    */
   private void configureAutoModes() {
     autoChooser.setDefaultOption("Wait 1 sec(do nothing)", new WaitCommand(1));
-    autoChooser.addOption("Straight 2m", straight2Meters());
-    autoChooser.addOption("Straight 2m Turn", straight2MetersTurn());
-    autoChooser.addOption("Diagonal 1m", diagonal1Meter());
-    autoChooser.addOption("Five piece", fivePiece());
-    autoChooser.addOption("Bump 2 piece", bump2Piece());
+    autoChooser.addOption("Center 1 Piece", centerOnePiece(false));
+    autoChooser.addOption("Center 1 Piece Balance", centerOnePiece(true));
+    autoChooser.addOption("Five Piece", fivePiece());
+    autoChooser.addOption("Four Piece", fourPiece(false));
+    autoChooser.addOption("Four Piece Balance", fourPiece(true));
+    autoChooser.addOption("Three Piece", threePiece(false));
+    autoChooser.addOption("Three Piece Balance", threePiece(true));
+    autoChooser.addOption("Bump Four Piece", bumpFourPiece(false));
+    autoChooser.addOption("Bump Four Piece Balance", bumpFourPiece(true));
+    autoChooser.addOption("Bump Three Piece", bumpThreePiece(false));
+    autoChooser.addOption("Bump Three Piece Balance", bumpThreePiece(true));
     SmartDashboard.putData(RobotContainer.autoChooser);
   }
 
@@ -331,9 +337,8 @@ public class RobotContainer {
      * @return The percent output if velocity mode is not being used, otherwise the velocity. 
      */
     public double getRobotRotation (boolean isVeloMode) {
-      double raw = (this.getDriverAxis(Axis.kRightTrigger) - Robot.robotContainer.getDriverAxis(Axis.kLeftTrigger));
-      return -Math.copySign(Math.pow(raw, Constants.ControllerConstants.DRIVER_ROT_SPEED_SCALE_EXPONENTIAL), raw) 
-          * (isVeloMode ? Constants.SwerveDriveConstants.MAX_ROBOT_ROT_VELOCITY : Constants.ControllerConstants.DRIVER_PERCENT_ROT_SPEED_SCALE_LINEAR);
+      return -(this.getDriverAxis(Axis.kRightTrigger) - Robot.robotContainer.getDriverAxis(Axis.kLeftTrigger))
+        * (isVeloMode ? Constants.SwerveDriveConstants.MAX_ROBOT_ROT_VELOCITY : Constants.ControllerConstants.DRIVER_PERCENT_ROT_SPEED_SCALE_LINEAR);
   }
 
   public boolean driveMod () {
@@ -342,5 +347,9 @@ public class RobotContainer {
 
   public boolean driveAlign () {
     return driver.getPOV() == 90;
+  }
+
+  public boolean driverMoving () {
+    return Math.abs(getRobotForward(true, false)) > 0.0 || Math.abs(getRobotLateral(true, false)) > 0.0 || Math.abs(getRobotRotation(true)) > 0.0;
   }
 }

@@ -15,7 +15,6 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -50,7 +49,6 @@ public class Arm extends SubsystemBase {
     armMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
     armMotor.setInverted(false);
     armMotor.setIdleMode(IdleMode.kBrake);
-    // armMotor.setClosedLoopRampRate(1);
 
     // Arm frame settings.
     armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
@@ -60,7 +58,6 @@ public class Arm extends SubsystemBase {
     armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 59453);
     armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 6);
     armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 10);
-
 
     // Arm encoder settings.
     armEncoder.setPositionConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR);
@@ -85,6 +82,7 @@ public class Arm extends SubsystemBase {
     wristMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
     wristMotor.setInverted(false);
     wristMotor.setIdleMode(IdleMode.kBrake);
+    wristMotor.setClosedLoopRampRate(0.3);
     
     // Wrist frame settings.
     wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);

@@ -114,6 +114,9 @@ public class Intake extends SubsystemBase {
   public Command pickUpCube(boolean waitForSensor) {
     if (waitForSensor) {
       return setMotors(IntakeConstants.OUTER_INTAKE_SPEED, IntakeConstants.INNER_INTAKE_SPEED)
+        .andThen(Commands.run(() -> {
+          
+        }))
         .until(this::hasCube)
         .andThen(Commands.waitSeconds(0.05))
         .andThen(stopMotors());

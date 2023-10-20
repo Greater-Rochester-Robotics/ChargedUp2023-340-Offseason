@@ -7,7 +7,6 @@ package frc.robot.subsystems.swervelib;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.swervelib.ctre.SwerveRotationTalonSRX;
 import frc.robot.subsystems.swervelib.interfaces.SwerveAbsoluteSensor;
 import frc.robot.subsystems.swervelib.interfaces.SwerveMoveMotor;
@@ -27,7 +26,6 @@ public class SwerveModule {
     private SwerveMoveMotor driveMotor;
     private SwerveRotationMotor rotationMotor;
     private SwerveAbsoluteSensor absSensor;
-    private double varOfRelToAbs;
 
     //The follwing constants are needed all the time, but are made once here
     static final double PI_OVER_TWO = Math.PI/2;

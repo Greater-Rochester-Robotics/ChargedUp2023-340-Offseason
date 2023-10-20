@@ -202,7 +202,7 @@ public class GRRSwerveTargetController {
 
         // - Find the maximum feasible delta in the a module's heading.
         //   Acceleration is assumed to be a non-factor.
-        double maxMrvDelta = 0.020 * 30.0;
+        double maxMrvDelta = 0.020 * 17.0;
 
         // (Limit s based on module turning constraints)
         // For every module:
@@ -282,8 +282,7 @@ public class GRRSwerveTargetController {
         }
 
         // - Find the max feasible delta in the robot's velocity.
-        double maxVDelta = 0.020 * 7.6
-        ;
+        double maxVDelta = 0.020 * 6.5;
 
         // (Limit s based on velocity constraints)
         // For every module:

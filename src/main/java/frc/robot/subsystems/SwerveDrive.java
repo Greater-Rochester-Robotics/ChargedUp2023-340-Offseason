@@ -233,6 +233,14 @@ public class SwerveDrive extends SubsystemBase {
     }
   }
 
+  public void driveX () {
+      Translation2d[] moduleLocations = new Translation2d[] {Constants.SwerveDriveConstants.FRONT_LEFT_POSITION, Constants.SwerveDriveConstants.REAR_LEFT_POSITION, Constants.SwerveDriveConstants.REAR_RIGHT_POSITION, Constants.SwerveDriveConstants.FRONT_RIGHT_POSITION};
+
+      for (int i = 0; i < 4; i++) {
+        swerveModules[i].setModuleState(new SwerveModuleState(0.0, moduleLocations[i].getAngle()), false);
+      }
+  }
+
   /**
    * Drives the robot based on speeds from the robot's orientation.
    * all speed should be in range of -1.0 to 1.0 with 0.0 being not 

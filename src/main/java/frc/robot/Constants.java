@@ -80,8 +80,8 @@ public class Constants {
         // public static final double DRIVE_MAX_ANGULAR_VELOCITY = 13.5;//10.8;//PathFollowing
         // public static final double DRIVE_MAX_ANGULAR_ACCEL = 8.5;//7.03;//PathFollowing
         // public static final double DRIVE_ROTATION_MIN_VELOCITY = 25;
-        public static final double PATH_MAXIMUM_VELOCITY = 4.0;
-        public static final double PATH_MAXIMUM_ACCELERATION = 5.0;
+        public static final double PATH_MAXIMUM_VELOCITY = 4.7;
+        public static final double PATH_MAXIMUM_ACCELERATION = 5.5;
 
         /* Aiming Values*/
         public static final Translation2d FIELD_CENTER = new Translation2d();
@@ -141,9 +141,9 @@ public class Constants {
         }
     }
     public static class IntakeConstants {
-        public static final double OUTER_INTAKE_SPEED = 0.2;
-        public static final double INNER_INTAKE_SPEED = 0.8;
-        public static final double INNER_HOLD_SPEED = 0.2;
+        public static final double OUTER_INTAKE_SPEED = 0.25;
+        public static final double INNER_INTAKE_SPEED = 1.0;
+        public static final double INNER_HOLD_SPEED = 0.1;
         public static final double SHOOT_SPEED_LOW = -0.07;
         public static final double SHOOT_SPEED_MID = -0.16;
         public static final double SHOOT_SPEED_HIGH = -0.20;
@@ -187,10 +187,10 @@ public class Constants {
 
     public static class ControllerConstants {
         public static final double CONTROLLER_DEADZONE = 0.15;
-        // public static final double DRIVER_SPEED_SCALE_LINEAR = 0.80; // Cody Speed
-        public static final double DRIVER_SPEED_SCALE_LINEAR = 0.65; // Cam Speed
+        public static final double DRIVER_SPEED_SCALE_LINEAR = 0.80; // Cody Speed
+        // public static final double DRIVER_SPEED_SCALE_LINEAR = 0.65; // Cam Speed
         public static final double DRIVER_SPEED_SCALE_ROTATIONAL = .75;
-        public static final double DRIVER_ROT_SPEED_SCALE_EXPONENTIAL = 3.0;
+        public static final double DRIVER_ROT_SPEED_SCALE_EXPONENTIAL = 2.5;
         public static final double DRIVER_PERCENT_ROT_SPEED_SCALE_LINEAR = 1.0;
     }
 }

@@ -16,7 +16,11 @@ public class Routines {
     private Routines() {
         throw new UnsupportedOperationException("This is a utility class!");
     }
-    
+
+    public static Command intake() {
+        return intake(false);
+    }
+
     public static Command intake(boolean waitForSensor) {
         if(waitForSensor) {
             return sequence(
@@ -32,10 +36,6 @@ public class Routines {
                 arm.setPosition(Positions.INTAKE)
             );
         }
-    }
-
-    public static Command intake() {
-        return intake(false);
     }
 
     public static Command storeCube() {
