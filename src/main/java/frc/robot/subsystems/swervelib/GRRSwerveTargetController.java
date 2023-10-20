@@ -282,7 +282,8 @@ public class GRRSwerveTargetController {
         }
 
         // - Find the max feasible delta in the robot's velocity.
-        double maxVDelta = 0.020 * 8.0;
+        double maxVDelta = 0.020 * 7.6
+        ;
 
         // (Limit s based on velocity constraints)
         // For every module:

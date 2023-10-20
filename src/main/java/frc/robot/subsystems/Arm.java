@@ -15,6 +15,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -35,6 +36,9 @@ public class Arm extends SubsystemBase {
 
   private double lastArmPosition, lastWristPosition;
   private boolean positionInitialized;
+
+  private double armSetpoint = 0.0;
+  private double wristSetpoint = 0.0;
   
   /** Creates a new Arm. */
   public Arm() {
@@ -75,6 +79,7 @@ public class Arm extends SubsystemBase {
     wristMotor = new CANSparkMax(Constants.RobotMap.WRIST_MOTOR, MotorType.kBrushless);
     wristEncoder = wristMotor.getAbsoluteEncoder(Type.kDutyCycle);
     wristController = wristMotor.getPIDController();
+    wristController.setPositionPIDWrappingEnabled(false);
 
     // Wrist motor settings.
     wristMotor.enableVoltageCompensation(Constants.MAXIMUM_VOLTAGE);
@@ -93,7 +98,7 @@ public class Arm extends SubsystemBase {
     // Wrist encoder settings
     wristEncoder.setPositionConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR);
     wristEncoder.setVelocityConversionFactor(ArmConstants.ABS_ENC_TO_RAD_CONVERSION_FACTOR / 60);
-    wristEncoder.setZeroOffset(0.197244179);
+    wristEncoder.setZeroOffset(3.33883683);
 
     wristController.setFeedbackDevice(wristEncoder);
     wristController.setP(ArmConstants.WRIST_P);    
@@ -117,6 +122,8 @@ public class Arm extends SubsystemBase {
       SmartDashboard.putNumber("wristCorrectedAngle", getWristCorrectedAngle());
       SmartDashboard.putNumber("applied wrist", wristMotor.getAppliedOutput());
       SmartDashboard.putNumber("applied arm", armMotor.getAppliedOutput());
+      SmartDashboard.putNumber("armSetpoint", armSetpoint);
+      SmartDashboard.putNumber("wristSetpoint", wristSetpoint);
       // smartDashboardDelay = 0;
     // }
 
@@ -164,6 +171,9 @@ public class Arm extends SubsystemBase {
         armController.setReference(position.getArm(), CANSparkMax.ControlType.kPosition);
         wristController.setReference(position.getWrist(), CANSparkMax.ControlType.kPosition, 0, getWristFeedForward());
 
+        armSetpoint = position.getArm();
+        wristSetpoint = position.getWrist();
+
         lastArmPosition = getArmPosition();
         lastWristPosition = getWristPosition();
         positionInitialized = true;
@@ -188,6 +198,9 @@ public class Arm extends SubsystemBase {
         if(positionInitialized) {
           armController.setReference(lastArmPosition, CANSparkMax.ControlType.kPosition);
           wristController.setReference(lastWristPosition, CANSparkMax.ControlType.kPosition, 0, getWristFeedForward());
+
+          armSetpoint = lastArmPosition;
+          wristSetpoint = lastWristPosition;
         }
       })
       .onEnd((interrupted) -> {

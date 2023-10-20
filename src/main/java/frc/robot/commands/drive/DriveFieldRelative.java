@@ -8,6 +8,10 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 
 import frc.robot.Constants;
@@ -27,6 +31,8 @@ import frc.robot.RobotContainer;
  */
 public class DriveFieldRelative extends CommandBase {
   private boolean isVeloMode;
+  private PIDController rotController = new PIDController(5.0, 0.0, 0.0);
+
   /**
    * Creates a new DriveFieldCentric.
    */
@@ -34,6 +40,7 @@ public class DriveFieldRelative extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
     this.isVeloMode = isVeloMode;
+    rotController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   // Called when the command is initially scheduled.
@@ -46,14 +53,15 @@ public class DriveFieldRelative extends CommandBase {
   public void execute() {
     double  awaySpeed = Robot.robotContainer.getRobotForward(isVeloMode, false);
     double lateralSpeed = Robot.robotContainer.getRobotLateral(isVeloMode, false);
-    //check if secondary sticks are being used
-    if(Math.abs(Robot.robotContainer.getDriverAxis(Axis.kRightY))>.1 ||
-     Math.abs(Robot.robotContainer.getDriverAxis(Axis.kRightX))>.1){
+    double rotSpeed = Robot.robotContainer.getRobotRotation(isVeloMode);
+
+    if (Robot.robotContainer.driveAlign()) {
+      rotSpeed = rotController.calculate(MathUtil.angleModulus(RobotContainer.swerveDrive.getGyroInRadYaw()), Math.PI);
+    } else if(Robot.robotContainer.driveMod()){
      //if secondary sticks used, replace with secondary sticks witha slow factor
      awaySpeed = Robot.robotContainer.getRobotForward(isVeloMode, true);
      lateralSpeed = Robot.robotContainer.getRobotLateral(isVeloMode, true);
     }
-    double rotSpeed = Robot.robotContainer.getRobotRotation(isVeloMode);
 
     RobotContainer.swerveDrive.driveFieldRelative(
       awaySpeed,

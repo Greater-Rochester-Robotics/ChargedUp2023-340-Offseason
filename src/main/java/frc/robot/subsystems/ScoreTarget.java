@@ -79,9 +79,7 @@ public class ScoreTarget extends SubsystemBase {
           break;
       }
 
-      return command.finallyDo((interrupted) -> {
-        if (!interrupted) intake.stopMotors();
-      });
+      return command.finallyDo((interrupted) -> intake.stopMotors());
     }) {{
       addRequirements(arm);
     }};

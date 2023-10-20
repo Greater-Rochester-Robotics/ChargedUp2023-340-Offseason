@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ArmConstants.Positions;
 import frc.robot.commands.drive.DriveBalanceRobot;
 import frc.robot.commands.drive.DriveFieldRelative;
@@ -143,6 +144,7 @@ public class RobotContainer {
     /* ==================== DRIVER BUTTONS ==================== */
     driverA.onTrue(intake(false)).onFalse(storeCube());
     driverB.onTrue(scoreTarget.getDriverCommand()).onFalse(intake.stopMotors());
+    driverX.onTrue(intake.setMotors(IntakeConstants.OUTER_INTAKE_SPEED, IntakeConstants.INNER_INTAKE_SPEED)).onFalse(intake.stopMotors());
     driverDLeft.onTrue(new DriveResetGyroToZero());
     driverBack.or(driverStart).toggleOnTrue(new DriveRobotCentric(true)); 
     driverRB.and(driverRTButton.negate()).whileTrue(new DriveBalanceRobot(true)).onFalse(new DriveLockWheels());
@@ -334,4 +336,11 @@ public class RobotContainer {
           * (isVeloMode ? Constants.SwerveDriveConstants.MAX_ROBOT_ROT_VELOCITY : Constants.ControllerConstants.DRIVER_PERCENT_ROT_SPEED_SCALE_LINEAR);
   }
 
+  public boolean driveMod () {
+    return driver.getYButton();
+  }
+
+  public boolean driveAlign () {
+    return driver.getPOV() == 90;
+  }
 }

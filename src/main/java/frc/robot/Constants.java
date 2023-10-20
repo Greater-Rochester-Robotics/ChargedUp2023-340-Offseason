@@ -128,16 +128,16 @@ public class Constants {
 
         public static final double WRIST_TOLERANCE = 0.05;
 
-        public static final double WRIST_MAX = 5.55;
-        public static final double WRIST_MIN = 3.75;
+        public static final double WRIST_MAX = 3.1;
+        public static final double WRIST_MIN = 0.55;
 
         public static final class Positions {
-            public static final Arm.Position INTAKE = new Arm.Position(.435, 3.8);
-            public static final Arm.Position SAFE = new Arm.Position(.435, 5.5);
-            public static final Arm.Position SHOOT_LOW = new Arm.Position(.435, 4.0);
-            public static final Arm.Position SHOOT_MID = new Arm.Position(.435, 5.2);
-            public static final Arm.Position SHOOT_HIGH = new Arm.Position(.435, 5.2);
-            public static final Arm.Position SHOOT_FAR = new Arm.Position(.63, 4.5);
+            public static final Arm.Position INTAKE = new Arm.Position(.435, 0.58);
+            public static final Arm.Position SAFE = new Arm.Position(.435, 3.0);
+            public static final Arm.Position SHOOT_LOW = new Arm.Position(.435, 0.85);
+            public static final Arm.Position SHOOT_MID = new Arm.Position(.435, 2.05);
+            public static final Arm.Position SHOOT_HIGH = new Arm.Position(.435, 2.05);
+            public static final Arm.Position SHOOT_FAR = new Arm.Position(.63, 1.35);
         }
     }
     public static class IntakeConstants {
@@ -146,9 +146,9 @@ public class Constants {
         public static final double INNER_HOLD_SPEED = 0.2;
         public static final double SHOOT_SPEED_LOW = -0.07;
         public static final double SHOOT_SPEED_MID = -0.16;
-        public static final double SHOOT_SPEED_HIGH = -0.30;
-        public static final double SHOOT_SPEED_FAR_UPPER = -0.9;
-        public static final double SHOOT_SPEED_FAR_LOWER = -0.8;
+        public static final double SHOOT_SPEED_HIGH = -0.20;
+        public static final double SHOOT_SPEED_FAR_UPPER = -0.5;
+        public static final double SHOOT_SPEED_FAR_LOWER = -0.35;
         public static final double SHOOT_SPEED_INNER = -1.0;
     }
 
@@ -187,9 +187,10 @@ public class Constants {
 
     public static class ControllerConstants {
         public static final double CONTROLLER_DEADZONE = 0.15;
-        public static final double DRIVER_SPEED_SCALE_LINEAR = 0.75;
+        // public static final double DRIVER_SPEED_SCALE_LINEAR = 0.80; // Cody Speed
+        public static final double DRIVER_SPEED_SCALE_LINEAR = 0.65; // Cam Speed
         public static final double DRIVER_SPEED_SCALE_ROTATIONAL = .75;
-        public static final double DRIVER_ROT_SPEED_SCALE_EXPONENTIAL = 2.0;
+        public static final double DRIVER_ROT_SPEED_SCALE_EXPONENTIAL = 3.0;
         public static final double DRIVER_PERCENT_ROT_SPEED_SCALE_LINEAR = 1.0;
     }
 }
