@@ -60,6 +60,12 @@ public class SwerveAbsoluteCANCoder implements SwerveAbsoluteSensor{
         rotateAbsSensor.configMagnetOffset(value, 0);
     }
 
+    public void setAllPeriodicFramePeriods() {
+        rotateAbsSensor.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 20);
+        rotateAbsSensor.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 255);
+        // System.out.println("set encoder periods");
+    }
+
     /**
      * The CANCoder has a mechanical zero point, this is hard 
      * to move, so this method is used to change the offset of 

@@ -70,6 +70,8 @@ public class SwerveDrive extends SubsystemBase {
   private GRRSwerveTarget lastTarget;
   private GRRSwerveTargetController targetController;
 
+  private int statusFramesCounter = 0;
+
   /**
    * This enumeration clarifies the numbering of the swerve module for new users.
    * frontLeft  | 0
@@ -165,10 +167,28 @@ public class SwerveDrive extends SubsystemBase {
     lastTarget = new GRRSwerveTarget(new ChassisSpeeds(), getSwerveModuleStates());
     targetController = new GRRSwerveTargetController(driveKinematics, new Translation2d[] {Constants.SwerveDriveConstants.FRONT_LEFT_POSITION, Constants.SwerveDriveConstants.REAR_LEFT_POSITION, 
       Constants.SwerveDriveConstants.REAR_RIGHT_POSITION, Constants.SwerveDriveConstants.FRONT_RIGHT_POSITION});
+
+    statusFramesCounter = 0;
   }
 
   @Override
   public void periodic() {
+    if(statusFramesCounter >= 50) {
+      for(SwerveMoveNEO move : swerveMoveNEO) {
+        move.setAllPeriodicFramePeriods();
+      }
+      for(SwerveRotationNEO rotation : swerveRotationNEO) {
+        rotation.setAllPeriodicFramePeriods();
+      }
+      for(SwerveAbsoluteCANCoder encoder : swerveRotationEncoder) {
+        encoder.setAllPeriodicFramePeriods();
+      }
+
+      statusFramesCounter = 0;
+    }
+
+    statusFramesCounter++;
+
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("GyroRoll", this.getGyroInDegRoll());
     SmartDashboard.putNumber("GyroPitch", this.getGyroInDegPitch());

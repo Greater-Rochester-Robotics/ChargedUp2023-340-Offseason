@@ -90,6 +90,15 @@ public class SwerveRotationNEO implements SwerveRotationMotor , SwerveAbsoluteSe
             areValuesUpdated = true;
         }
 
+        setAllPeriodicFramePeriods();
+
+        //if values have changed burn NEO flash
+        if(areValuesUpdated){
+            rotationMotor.burnFlash();
+        }
+    }
+
+    public void setAllPeriodicFramePeriods() {
         rotationMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 2000);
         rotationMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         rotationMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
@@ -97,11 +106,7 @@ public class SwerveRotationNEO implements SwerveRotationMotor , SwerveAbsoluteSe
         rotationMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 2000);
         rotationMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
         rotationMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
-
-        //if values have changed burn NEO flash
-        if(areValuesUpdated){
-            rotationMotor.burnFlash();
-        }
+        // System.out.println("set rotation periods");
     }
 
     public void setRotationMotorBrake(boolean brakeOn){
@@ -216,5 +221,4 @@ public class SwerveRotationNEO implements SwerveRotationMotor , SwerveAbsoluteSe
     public double getSpeedInRad(){
         return absoluteEncoder.getVelocity();
     }
-
 }

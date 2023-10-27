@@ -102,6 +102,17 @@ public class SwerveMoveNEO implements SwerveMoveMotor{
         
     }
 
+    public void setAllPeriodicFramePeriods() {
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 1000);
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 2000);
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 2000);
+        // System.out.println("set move periods");
+    }
+
 
     public void setDriveDutyCycle(double dutyCycle){
         driveMotor.set(dutyCycle);

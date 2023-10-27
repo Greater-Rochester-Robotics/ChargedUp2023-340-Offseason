@@ -146,7 +146,7 @@ public class Constants {
         public static final double INNER_HOLD_SPEED = 0.1;
         public static final double SHOOT_SPEED_LOW = -0.07;
         public static final double SHOOT_SPEED_MID = -0.16;
-        public static final double SHOOT_SPEED_HIGH = -0.20;
+        public static final double SHOOT_SPEED_HIGH = -0.21;
         public static final double SHOOT_SPEED_FAR_UPPER = -0.5;
         public static final double SHOOT_SPEED_FAR_LOWER = -0.35;
         public static final double SHOOT_SPEED_INNER = -1.0;
@@ -187,8 +187,8 @@ public class Constants {
 
     public static class ControllerConstants {
         public static final double CONTROLLER_DEADZONE = 0.15;
-        public static final double DRIVER_SPEED_SCALE_LINEAR = 0.80; // Cody Speed
-        // public static final double DRIVER_SPEED_SCALE_LINEAR = 0.65; // Cam Speed
+        // public static final double DRIVER_SPEED_SCALE_LINEAR = 0.80; // Cody Speed
+        public static final double DRIVER_SPEED_SCALE_LINEAR = 0.65; // Cam Speed
         public static final double DRIVER_SPEED_SCALE_ROTATIONAL = .75;
         public static final double DRIVER_ROT_SPEED_SCALE_EXPONENTIAL = 2.5;
         public static final double DRIVER_PERCENT_ROT_SPEED_SCALE_LINEAR = 1.0;

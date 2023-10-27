@@ -144,7 +144,8 @@ public class RobotContainer {
     /* ==================== DRIVER BUTTONS ==================== */
     driverA.onTrue(intake(true)).onFalse(storeCube());
     driverB.onTrue(scoreTarget.getDriverCommand()).onFalse(intake.stopMotors());
-    driverX.onTrue(intake.setMotors(IntakeConstants.OUTER_INTAKE_SPEED, IntakeConstants.INNER_INTAKE_SPEED)).onFalse(intake.stopMotors());
+    driverX.onTrue(intake(false)).onFalse(storeCube());
+    // driverX.onTrue(intake.setMotors(IntakeConstants.OUTER_INTAKE_SPEED, IntakeConstants.INNER_INTAKE_SPEED)).onFalse(intake.stopMotors());
     driverDLeft.onTrue(new DriveResetGyroToZero());
     driverBack.or(driverStart).toggleOnTrue(new DriveRobotCentric(true)); 
     driverRB.and(driverRTButton.negate()).whileTrue(new DriveBalanceRobot()).onFalse(run(swerveDrive::driveX).until(this::driverMoving));
