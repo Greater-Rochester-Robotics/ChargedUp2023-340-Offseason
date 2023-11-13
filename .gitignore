@@ -41,6 +41,7 @@
 
 # Log file
 *.log
+*.wpilog
 
 # BlueJ files
 *.ctxt
@@ -158,5 +159,24 @@ gradle-app.setting
 .settings/
 bin/
 
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+
+# Fleet
+.fleet
+
 # Simulation GUI and other tools window save file
+networktables.json
+simgui*.json
 *-window.json
+
+# Dashboard
+dashboard/dist/
+dashboard/node_modules/
+dashboard/src-tauri/target/
+dashboard/src-tauri/Cargo.lock
+dashboard/package-lock.json
