@@ -8,6 +8,7 @@ import org.team340.lib.math.Math2;
 import org.team340.lib.swerve.SwerveBase.SwerveMotorType;
 import org.team340.lib.swerve.config.SwerveConfig;
 import org.team340.lib.swerve.config.SwerveModuleConfig;
+import org.team340.lib.util.PIDConfig;
 import org.team340.robot.subsystems.Arm;
 
 /**
@@ -125,10 +126,9 @@ public final class Constants {
             .addModule(BACK_RIGHT)
             .addModule(FRONT_RIGHT);
 
-        public static final double POSE_ROT_P = 7.0;
-        public static final double POSE_ROT_I = 0.0;
-        public static final double POSE_ROT_D = 0.5;
-        public static final Constraints POSE_ROT_CONSTRAINTS = new Constraints(6.0, 12.5);
+        public static final PIDConfig XY_PID = new PIDConfig(7.0, 0.0, 0.5);
+        public static final PIDConfig ROTATION_PID = new PIDConfig(7.0, 0.0, 0.5);
+        public static final Constraints ROTATION_CONSTRAINTS = new Constraints(6.0, 12.5);
     }
 
     public static class ArmConstants {

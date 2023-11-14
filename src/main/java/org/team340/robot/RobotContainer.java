@@ -146,7 +146,7 @@ public final class RobotContainer {
      * added to {@link GRRDashboard}.
      */
     private static void configureAutos() {
-        GRRDashboard.addAutoCommand("Example", Autos.example());
+        GRRDashboard.addAutoCommand("Test Path", Autos.followTestPath());
         // If an auto uses a PathPlanner path file, make sure to include it.
         // GRRDashboard.addAutoCommand("Example", Autos.example(), "pathFileName");
     }
