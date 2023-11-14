@@ -80,7 +80,7 @@ public class Arm extends GRRSubsystem {
         wristMotor.enableVoltageCompensation(Constants.VOLTAGE);
         wristMotor.setInverted(false);
         wristMotor.setIdleMode(IdleMode.kBrake);
-        wristMotor.setClosedLoopRampRate(0.4);
+        wristMotor.setClosedLoopRampRate(ArmConstants.WRIST_RAMP_RATE);
 
         // Wrist frame settings.
         wristMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);

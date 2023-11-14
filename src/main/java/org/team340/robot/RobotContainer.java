@@ -26,7 +26,6 @@ public final class RobotContainer {
     }
 
     private static AdvancedController driver;
-    private static AdvancedController coDriver;
 
     public static Swerve swerve;
     public static Arm arm;
@@ -46,18 +45,9 @@ public final class RobotContainer {
                 ControllerConstants.TRIGGER_DEADBAND,
                 ControllerConstants.TRIGGER_THRESHOLD
             );
-        coDriver =
-            new AdvancedController(
-                ControllerConstants.CO_DRIVER,
-                ControllerConstants.JOYSTICK_DEADBAND,
-                ControllerConstants.JOYSTICK_THRESHOLD,
-                ControllerConstants.TRIGGER_DEADBAND,
-                ControllerConstants.TRIGGER_THRESHOLD
-            );
 
         // Add controllers to the dashboard.
         GRRDashboard.addController("Driver", driver);
-        GRRDashboard.addController("CoDriver", coDriver);
 
         // Initialize subsystems.
         swerve = new Swerve();
@@ -94,13 +84,23 @@ public final class RobotContainer {
         /**
          * Driver bindings.
          */
-
-        driver.a().onTrue(intake(true)).onFalse(storeCube());
+        driver.a().onTrue(intake(false)).onFalse(storeCube());
         driver.b().onTrue(scoreTarget.getDriverCommand()).onFalse(intake.stopMotors());
-        driver.x().onTrue(intake(false)).onFalse(storeCube());
+        driver
+            .x()
+            .onTrue(
+                sequence(scoreTarget.setLevel(Level.MID), scoreTarget.getCoDriverCommand().withTimeout(1.5), scoreTarget.getDriverCommand())
+            )
+            .onFalse(sequence(intake.stopMotors(), arm.setPosition(Positions.SAFE)));
         driver
             .y()
-            .onTrue(sequence(scoreTarget.setLevel(Level.FAR), scoreTarget.getCoDriverCommand(), scoreTarget.getDriverCommand()))
+            .onTrue(
+                sequence(
+                    scoreTarget.setLevel(Level.HIGH),
+                    scoreTarget.getCoDriverCommand().withTimeout(1.5),
+                    scoreTarget.getDriverCommand()
+                )
+            )
             .onFalse(sequence(intake.stopMotors(), arm.setPosition(Positions.SAFE)));
 
         // POV Left => Zero swerve
@@ -111,34 +111,6 @@ public final class RobotContainer {
 
         // Right Bumper => Lock wheels
         driver.rightBumper().whileTrue(swerve.lock());
-
-        /**
-         * Co-driver bindings.
-         */
-
-        coDriver
-            .a()
-            .onTrue(sequence(scoreTarget.setLevel(Level.LOW), scoreTarget.getCoDriverCommand()))
-            .onFalse(arm.setPosition(Positions.SAFE));
-        coDriver
-            .b()
-            .onTrue(sequence(scoreTarget.setLevel(Level.MID), scoreTarget.getCoDriverCommand()))
-            .onFalse(arm.setPosition(Positions.SAFE));
-        coDriver
-            .x()
-            .onTrue(sequence(scoreTarget.setLevel(Level.HIGH), scoreTarget.getCoDriverCommand()))
-            .onFalse(arm.setPosition(Positions.SAFE));
-        coDriver
-            .y()
-            .onTrue(sequence(scoreTarget.setLevel(Level.FAR), scoreTarget.getCoDriverCommand()))
-            .onFalse(arm.setPosition(Positions.SAFE));
-
-        coDriver.leftBumper().whileTrue(arm.setDutyCycle(() -> getArmManualSpeed(), () -> 0.0));
-        coDriver.rightBumper().whileTrue(arm.setDutyCycle(() -> 0.0, () -> getWristManualSpeed()));
-        coDriver
-            .leftBumper()
-            .and(coDriver.rightBumper())
-            .whileTrue(arm.setDutyCycle(() -> getArmManualSpeed(), () -> getWristManualSpeed()));
     }
 
     /**
@@ -174,21 +146,5 @@ public final class RobotContainer {
      */
     private static double getDriveRotate() {
         return driver.getTriggerDifference(ControllerConstants.DRIVE_ROT_MULTIPLIER, ControllerConstants.DRIVE_ROT_EXP);
-    }
-
-    /**
-     * Gets the arm's manual speed from the co-driver's controller (left stick Y).
-     * @return The speed from -1.0 to 1.0, scaled to the max output.
-     */
-    public static double getArmManualSpeed() {
-        return coDriver.getLeftY(Constants.ArmConstants.ARM_MAX_MANUAL_DUTY_CYCLE);
-    }
-
-    /**
-     * Gets the wrist's manual speed from the co-driver's controller (right stick Y).
-     * @return The speed from -1.0 to 1.0, scaled to the max output.
-     */
-    public static double getWristManualSpeed() {
-        return coDriver.getRightY(Constants.ArmConstants.WRIST_MAX_MANUAL_DUTY_CYCLE);
     }
 }

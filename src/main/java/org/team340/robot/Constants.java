@@ -28,7 +28,6 @@ public final class Constants {
     public static final class ControllerConstants {
 
         public static final int DRIVER = 0;
-        public static final int CO_DRIVER = 1;
 
         public static final double JOYSTICK_DEADBAND = 0.1;
         public static final double JOYSTICK_THRESHOLD = 0.7;
@@ -36,11 +35,11 @@ public final class Constants {
         public static final double TRIGGER_THRESHOLD = 0.1;
 
         public static final double DRIVE_EXP = 1.0;
-        public static final double DRIVE_MULTIPLIER = 0.6;
-        public static final double DRIVE_MULTIPLIER_MODIFIED = 0.95;
+        public static final double DRIVE_MULTIPLIER = 0.1;
+        public static final double DRIVE_MULTIPLIER_MODIFIED = 0.3;
 
         public static final double DRIVE_ROT_EXP = 2.0;
-        public static final double DRIVE_ROT_MULTIPLIER = 0.4;
+        public static final double DRIVE_ROT_MULTIPLIER = 0.3;
     }
 
     /**
@@ -73,9 +72,70 @@ public final class Constants {
         public static final int INTAKE_CUBE_LIMIT_DIGITAL_INPUT = 0;
     }
 
-    /**
-     * Constants for the swerve subsystem.
-     */
+    public static class ArmConstants {
+
+        public static final double ABS_ENC_TO_RAD_CONVERSION_FACTOR = Math2.TWO_PI;
+
+        public static final double ARM_SPEED_UP = 0.2;
+        public static final double ARM_SPEED_DOWN = -0.2;
+
+        public static final double ARM_P = 2.2;
+        public static final double ARM_I = 0;
+        public static final double ARM_D = 0;
+        public static final double ARM_F = 0;
+
+        public static final double ARM_MAX_PID_OUTPUT = .2;
+
+        public static final double ARM_TOLERANCE = 0.05;
+
+        public static final double ARM_MAX = 1.0;
+        public static final double ARM_MIN = 0.43;
+
+        public static final double ARM_MAX_MANUAL_DUTY_CYCLE = 0.3;
+        public static final double WRIST_MAX_MANUAL_DUTY_CYCLE = 0.3;
+
+        public static final double WRIST_SPEED_UP = 0.2;
+        public static final double WRIST_SPEED_DOWN = -0.2;
+
+        public static final double WRIST_P = 1.1;
+        public static final double WRIST_I = 0;
+        public static final double WRIST_D = 0.3;
+        public static final double WRIST_F = 0;
+        public static final double WRIST_GRAV_FF = 0.0; //.12;
+
+        public static final double WRIST_MAX_PID_OUTPUT = .9;
+
+        public static final double WRIST_TOLERANCE = 0.05;
+
+        public static final double WRIST_MAX = 3.1;
+        public static final double WRIST_MIN = 0.55;
+
+        public static final double WRIST_RAMP_RATE = 0.8;
+
+        public static final class Positions {
+
+            public static final Arm.Position INTAKE = new Arm.Position(.435, 0.58);
+            public static final Arm.Position SAFE = new Arm.Position(.435, 3.0);
+            public static final Arm.Position SHOOT_LOW = new Arm.Position(.435, 0.85);
+            public static final Arm.Position SHOOT_MID = new Arm.Position(.8, 1.65);
+            public static final Arm.Position SHOOT_HIGH = new Arm.Position(.8, 1.65);
+            public static final Arm.Position SHOOT_FAR = new Arm.Position(.63, 1.35);
+        }
+    }
+
+    public static class IntakeConstants {
+
+        public static final double OUTER_INTAKE_SPEED = 0.25;
+        public static final double INNER_INTAKE_SPEED = 1.0;
+        public static final double INNER_HOLD_SPEED = 0.1;
+        public static final double SHOOT_SPEED_LOW = -0.07;
+        public static final double SHOOT_SPEED_MID = -0.35;
+        public static final double SHOOT_SPEED_HIGH = -0.7;
+        public static final double SHOOT_SPEED_FAR_UPPER = -0.9;
+        public static final double SHOOT_SPEED_FAR_LOWER = -0.8;
+        public static final double SHOOT_SPEED_INNER = -1.0;
+    }
+
     public static final class SwerveConstants {
 
         private static final SwerveModuleConfig FRONT_LEFT = new SwerveModuleConfig()
@@ -129,67 +189,5 @@ public final class Constants {
         public static final double POSE_ROT_I = 0.0;
         public static final double POSE_ROT_D = 0.5;
         public static final Constraints POSE_ROT_CONSTRAINTS = new Constraints(6.0, 12.5);
-    }
-
-    public static class ArmConstants {
-
-        public static final double ABS_ENC_TO_RAD_CONVERSION_FACTOR = Math2.TWO_PI;
-
-        public static final double ARM_SPEED_UP = 0.2;
-        public static final double ARM_SPEED_DOWN = -0.2;
-
-        public static final double ARM_P = 2.2;
-        public static final double ARM_I = 0;
-        public static final double ARM_D = 0;
-        public static final double ARM_F = 0;
-
-        public static final double ARM_MAX_PID_OUTPUT = .2;
-
-        public static final double ARM_TOLERANCE = 0.05;
-
-        public static final double ARM_MAX = 0.635;
-        public static final double ARM_MIN = 0.43;
-
-        public static final double ARM_MAX_MANUAL_DUTY_CYCLE = 0.3;
-        public static final double WRIST_MAX_MANUAL_DUTY_CYCLE = 0.3;
-
-        public static final double WRIST_SPEED_UP = 0.2;
-        public static final double WRIST_SPEED_DOWN = -0.2;
-
-        public static final double WRIST_P = 1.1;
-        public static final double WRIST_I = 0;
-        public static final double WRIST_D = 0.3;
-        public static final double WRIST_F = 0;
-        public static final double WRIST_GRAV_FF = 0.0; //.12;
-
-        public static final double WRIST_MAX_PID_OUTPUT = .9;
-
-        public static final double WRIST_TOLERANCE = 0.05;
-
-        public static final double WRIST_MAX = 3.1;
-        public static final double WRIST_MIN = 0.55;
-
-        public static final class Positions {
-
-            public static final Arm.Position INTAKE = new Arm.Position(.435, 0.58);
-            public static final Arm.Position SAFE = new Arm.Position(.435, 3.0);
-            public static final Arm.Position SHOOT_LOW = new Arm.Position(.435, 0.85);
-            public static final Arm.Position SHOOT_MID = new Arm.Position(.435, 2.05);
-            public static final Arm.Position SHOOT_HIGH = new Arm.Position(.435, 2.05);
-            public static final Arm.Position SHOOT_FAR = new Arm.Position(.63, 1.35);
-        }
-    }
-
-    public static class IntakeConstants {
-
-        public static final double OUTER_INTAKE_SPEED = 0.25;
-        public static final double INNER_INTAKE_SPEED = 1.0;
-        public static final double INNER_HOLD_SPEED = 0.1;
-        public static final double SHOOT_SPEED_LOW = -0.07;
-        public static final double SHOOT_SPEED_MID = -0.16;
-        public static final double SHOOT_SPEED_HIGH = -0.21;
-        public static final double SHOOT_SPEED_FAR_UPPER = -0.9;
-        public static final double SHOOT_SPEED_FAR_LOWER = -0.8;
-        public static final double SHOOT_SPEED_INNER = -1.0;
     }
 }
