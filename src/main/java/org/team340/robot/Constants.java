@@ -116,10 +116,9 @@ public final class Constants {
 
             public static final Arm.Position INTAKE = new Arm.Position(.435, 0.61);
             public static final Arm.Position SAFE = new Arm.Position(.435, 3.0);
-            public static final Arm.Position SHOOT_LOW = new Arm.Position(.8, 1.65);
-            public static final Arm.Position SHOOT_MID = new Arm.Position(.8, 1.65);
-            public static final Arm.Position SHOOT_HIGH = new Arm.Position(1.0, 1.7);
-            public static final Arm.Position SHOOT_FAR = new Arm.Position(.63, 1.35);
+            public static final Arm.Position SHOOT_SLOW = new Arm.Position(.8, 1.65);
+            public static final Arm.Position SHOOT_NORMAL = new Arm.Position(.8, 1.65);
+            public static final Arm.Position SHOOT_FAST = new Arm.Position(1.0, 1.7);
         }
     }
 
@@ -128,11 +127,9 @@ public final class Constants {
         public static final double OUTER_INTAKE_SPEED = 0.25;
         public static final double INNER_INTAKE_SPEED = 0.9;
         public static final double INNER_HOLD_SPEED = 0.1;
-        public static final double SHOOT_SPEED_LOW = -0.2;
-        public static final double SHOOT_SPEED_MID = -0.35;
-        public static final double SHOOT_SPEED_HIGH = -0.6;
-        public static final double SHOOT_SPEED_FAR_UPPER = -0.9;
-        public static final double SHOOT_SPEED_FAR_LOWER = -0.8;
+        public static final double SHOOT_SPEED_SLOW = -0.2;
+        public static final double SHOOT_SPEED_NORMAL = -0.35;
+        public static final double SHOOT_SPEED_FAST = -0.6;
         public static final double SHOOT_SPEED_INNER = -1.0;
     }
 

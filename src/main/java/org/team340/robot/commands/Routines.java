@@ -15,18 +15,38 @@ public class Routines {
     }
 
     public static Command intake() {
-        return intake(false);
-    }
-
-    public static Command intake(boolean waitForSensor) {
-        if (waitForSensor) {
-            return sequence(deadline(intake.pickUpCube(waitForSensor), arm.setPosition(Positions.INTAKE)), storeCube());
-        } else {
-            return parallel(intake.pickUpCube(waitForSensor), arm.setPosition(Positions.INTAKE));
-        }
+        return parallel(intake.pickUpCube(), arm.setPosition(Positions.INTAKE));
     }
 
     public static Command storeCube() {
         return sequence(intake.setMotors(0.0, IntakeConstants.INNER_HOLD_SPEED), arm.setPosition(Positions.SAFE));
+    }
+
+    public static Command shootSlow() {
+        return sequence(
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_SLOW, IntakeConstants.INNER_HOLD_SPEED),
+            arm.setPosition(Positions.SHOOT_SLOW).withTimeout(1.5),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_SLOW, IntakeConstants.SHOOT_SPEED_INNER)
+        );
+    }
+
+    public static Command shootNormal() {
+        return sequence(
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_NORMAL, IntakeConstants.INNER_HOLD_SPEED),
+            arm.setPosition(Positions.SHOOT_NORMAL).withTimeout(1.5),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_NORMAL, IntakeConstants.SHOOT_SPEED_INNER)
+        );
+    }
+
+    public static Command shootFast() {
+        return sequence(
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAST, IntakeConstants.INNER_HOLD_SPEED),
+            arm.setPosition(Positions.SHOOT_FAST).withTimeout(1.5),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_FAST, IntakeConstants.SHOOT_SPEED_INNER)
+        );
+    }
+
+    public static Command stopShooting() {
+        return sequence(intake.stopMotors(), arm.setPosition(Positions.SAFE));
     }
 }

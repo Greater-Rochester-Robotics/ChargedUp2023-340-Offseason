@@ -12,10 +12,8 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import java.util.function.Supplier;
 import org.team340.lib.subsystem.GRRSubsystem;
 import org.team340.robot.Constants;
 import org.team340.robot.Constants.ArmConstants;
@@ -32,9 +30,6 @@ public class Arm extends GRRSubsystem {
 
     private double lastArmPosition, lastWristPosition;
     private boolean positionInitialized;
-
-    private double armSetpoint = 0.0;
-    private double wristSetpoint = 0.0;
 
     /** Creates a new Arm. */
     public Arm() {
@@ -108,22 +103,6 @@ public class Arm extends GRRSubsystem {
         wristMotor.burnFlash();
     }
 
-    @Override
-    public void periodic() {
-        // smartDashboardDelay++;
-        // if(smartDashboardDelay >= 50){
-        SmartDashboard.putNumber("armEncoder", armEncoder.getPosition());
-        SmartDashboard.putNumber("wristEncoder", wristEncoder.getPosition());
-        SmartDashboard.putNumber("wristCorrectedAngle", getWristCorrectedAngle());
-        SmartDashboard.putNumber("applied wrist", wristMotor.getAppliedOutput());
-        SmartDashboard.putNumber("applied arm", armMotor.getAppliedOutput());
-        SmartDashboard.putNumber("armSetpoint", armSetpoint);
-        SmartDashboard.putNumber("wristSetpoint", wristSetpoint);
-        // smartDashboardDelay = 0;
-        // }
-
-    }
-
     public Command setBrakeMode(boolean isBrakeMode) {
         return runOnce(() -> {
             armMotor.setIdleMode(isBrakeMode ? IdleMode.kBrake : IdleMode.kCoast);
@@ -131,31 +110,13 @@ public class Arm extends GRRSubsystem {
         });
     }
 
-    // arm methods
-
     public double getArmPosition() {
         return armEncoder.getPosition();
     }
 
-    // wrist methods
-
     public double getWristPosition() {
         return wristEncoder.getPosition();
     }
-
-    private double getWristFeedForward() {
-        return 0.0; // Math.cos(getWristCorrectedAngle()) * ArmConstants.WRIST_GRAV_FF;
-    }
-
-    /**
-     * returns the angle of the center of mass of the wrist with respect to the parallel of the ground
-     * @return
-     */
-    private double getWristCorrectedAngle() {
-        return wristEncoder.getPosition() + armEncoder.getPosition() - 3.949;
-    }
-
-    // Arm Commands
 
     public Command setPosition(Position position) {
         if (
@@ -172,10 +133,7 @@ public class Arm extends GRRSubsystem {
             .onInitialize(() -> {})
             .onExecute(() -> {
                 armController.setReference(position.getArm(), CANSparkMax.ControlType.kPosition);
-                wristController.setReference(position.getWrist(), CANSparkMax.ControlType.kPosition, 0, getWristFeedForward());
-
-                armSetpoint = position.getArm();
-                wristSetpoint = position.getWrist();
+                wristController.setReference(position.getWrist(), CANSparkMax.ControlType.kPosition);
 
                 lastArmPosition = getArmPosition();
                 lastWristPosition = getWristPosition();
@@ -203,30 +161,10 @@ public class Arm extends GRRSubsystem {
             .onExecute(() -> {
                 if (positionInitialized) {
                     armController.setReference(lastArmPosition, CANSparkMax.ControlType.kPosition);
-                    wristController.setReference(lastWristPosition, CANSparkMax.ControlType.kPosition, 0, getWristFeedForward());
-
-                    armSetpoint = lastArmPosition;
-                    wristSetpoint = lastWristPosition;
+                    wristController.setReference(lastWristPosition, CANSparkMax.ControlType.kPosition);
                 }
             })
             .onEnd(interrupted -> {
-                armMotor.stopMotor();
-                wristMotor.stopMotor();
-            });
-    }
-
-    public Command setDutyCycle(Supplier<Double> armDutyCycle, Supplier<Double> wristDutyCycle) {
-        return commandBuilder("arm.setDutyCycle()")
-            .onInitialize(() -> {})
-            .onExecute(() -> {
-                armMotor.set(armDutyCycle.get());
-                wristMotor.set(wristDutyCycle.get());
-
-                lastArmPosition = getArmPosition();
-                lastWristPosition = getWristPosition();
-                positionInitialized = true;
-            })
-            .onEnd(() -> {
                 armMotor.stopMotor();
                 wristMotor.stopMotor();
             });

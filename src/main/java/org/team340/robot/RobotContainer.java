@@ -1,6 +1,5 @@
 package org.team340.robot;
 
-import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static org.team340.robot.commands.Routines.*;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -8,14 +7,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.team340.lib.GRRDashboard;
 import org.team340.lib.control.AdvancedController;
 import org.team340.lib.util.RevUtil;
-import org.team340.robot.Constants.ArmConstants.Positions;
 import org.team340.robot.Constants.ControllerConstants;
-import org.team340.robot.commands.Autos;
-import org.team340.robot.commands.SystemsCheck;
 import org.team340.robot.subsystems.Arm;
 import org.team340.robot.subsystems.Intake;
-import org.team340.robot.subsystems.ScoreTarget;
-import org.team340.robot.subsystems.ScoreTarget.Level;
 import org.team340.robot.subsystems.Swerve;
 
 /**
@@ -32,7 +26,6 @@ public final class RobotContainer {
     public static Swerve swerve;
     public static Arm arm;
     public static Intake intake;
-    public static ScoreTarget scoreTarget;
 
     /**
      * Entry to initializing subsystems and command execution.
@@ -55,23 +48,17 @@ public final class RobotContainer {
         swerve = new Swerve();
         arm = new Arm();
         intake = new Intake();
-        scoreTarget = new ScoreTarget();
 
         // Add subsystems to the dashboard.
         swerve.addToDashboard();
         arm.addToDashboard();
         intake.addToDashboard();
-        scoreTarget.addToDashboard();
-
-        // Set systems check command.
-        GRRDashboard.setSystemsCheck(SystemsCheck.command());
 
         // Print successful REV hardware initialization.
         RevUtil.printSuccess();
 
-        // Configure bindings and autos.
+        // Configure bindings.
         configureBindings();
-        configureAutos();
     }
 
     /**
@@ -89,29 +76,18 @@ public final class RobotContainer {
         /**
          * Driver bindings.
          */
-        driver.a().onTrue(intake(false)).onFalse(storeCube());
-        driver
-            .b()
-            .onTrue(
-                sequence(scoreTarget.setLevel(Level.LOW), scoreTarget.getCoDriverCommand().withTimeout(1.5), scoreTarget.getDriverCommand())
-            )
-            .onFalse(sequence(intake.stopMotors(), arm.setPosition(Positions.SAFE)));
-        driver
-            .x()
-            .onTrue(
-                sequence(scoreTarget.setLevel(Level.MID), scoreTarget.getCoDriverCommand().withTimeout(1.5), scoreTarget.getDriverCommand())
-            )
-            .onFalse(sequence(intake.stopMotors(), arm.setPosition(Positions.SAFE)));
-        driver
-            .y()
-            .onTrue(
-                sequence(
-                    scoreTarget.setLevel(Level.HIGH),
-                    scoreTarget.getCoDriverCommand().withTimeout(1.5),
-                    scoreTarget.getDriverCommand()
-                )
-            )
-            .onFalse(sequence(intake.stopMotors(), arm.setPosition(Positions.SAFE)));
+
+        // A => Intake
+        driver.a().onTrue(intake()).onFalse(storeCube());
+
+        // B => Shoot slow
+        driver.b().onTrue(shootSlow()).onFalse(stopShooting());
+
+        // X => Shoot normal
+        driver.x().onTrue(shootNormal()).onFalse(stopShooting());
+
+        // Y => Shoot fast
+        driver.y().onTrue(shootFast()).onFalse(stopShooting());
 
         // POV Left => Zero swerve
         driver.povLeft().onTrue(swerve.zero(0.0));
@@ -121,16 +97,6 @@ public final class RobotContainer {
 
         // Right Bumper => Lock wheels
         driver.rightBumper().whileTrue(swerve.lock());
-    }
-
-    /**
-     * Autonomous commands should be declared here and
-     * added to {@link GRRDashboard}.
-     */
-    private static void configureAutos() {
-        GRRDashboard.addAutoCommand("Example", Autos.example());
-        // If an auto uses a PathPlanner path file, make sure to include it.
-        // GRRDashboard.addAutoCommand("Example", Autos.example(), "pathFileName");
     }
 
     /**

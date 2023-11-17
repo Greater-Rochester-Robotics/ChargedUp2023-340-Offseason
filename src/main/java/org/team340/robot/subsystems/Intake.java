@@ -11,10 +11,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import org.team340.lib.math.Math2;
 import org.team340.lib.subsystem.GRRSubsystem;
 import org.team340.robot.Constants;
@@ -22,12 +19,9 @@ import org.team340.robot.Constants.IntakeConstants;
 
 public class Intake extends GRRSubsystem {
 
-    private byte smartDashboardDelay = 0;
-
     private CANSparkMax upperMotor;
     private CANSparkMax lowerMotor;
     private TalonSRX innerMotor;
-    private DigitalInput cubeLimit;
 
     /** Creates a new Intake. */
     public Intake() {
@@ -68,27 +62,9 @@ public class Intake extends GRRSubsystem {
         innerMotor.configContinuousCurrentLimit(10);
         innerMotor.configPeakCurrentLimit(15);
 
-        cubeLimit = new DigitalInput(Constants.RobotMap.INTAKE_CUBE_LIMIT_DIGITAL_INPUT);
-
         upperMotor.burnFlash();
         lowerMotor.burnFlash();
     }
-
-    @Override
-    public void periodic() {
-        // This method will be called once per scheduler run
-        smartDashboardDelay++;
-        if (smartDashboardDelay >= 50) {
-            SmartDashboard.putBoolean("cube limit switch", hasCube());
-            smartDashboardDelay = 0;
-        }
-    }
-
-    public boolean hasCube() {
-        return !cubeLimit.get();
-    }
-
-    //----------Commands----------
 
     public Command stopMotors() {
         return setMotors(0.0, 0.0);
@@ -111,19 +87,6 @@ public class Intake extends GRRSubsystem {
     }
 
     public Command pickUpCube() {
-        // TODO Observe if sensor is reliable
-        return pickUpCube(false);
-    }
-
-    public Command pickUpCube(boolean waitForSensor) {
-        if (waitForSensor) {
-            return setMotors(IntakeConstants.OUTER_INTAKE_SPEED, IntakeConstants.INNER_INTAKE_SPEED)
-                .andThen(Commands.run(() -> {}))
-                .until(this::hasCube)
-                .andThen(Commands.waitSeconds(0.05))
-                .andThen(stopMotors());
-        } else {
-            return setMotors(IntakeConstants.OUTER_INTAKE_SPEED, IntakeConstants.INNER_INTAKE_SPEED);
-        }
+        return setMotors(IntakeConstants.OUTER_INTAKE_SPEED, IntakeConstants.INNER_INTAKE_SPEED);
     }
 }
