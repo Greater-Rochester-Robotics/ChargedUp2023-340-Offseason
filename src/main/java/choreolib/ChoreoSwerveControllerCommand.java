@@ -67,7 +67,7 @@ public class ChoreoSwerveControllerCommand extends Command {
 
         addRequirements(requirements);
 
-        if (useAllianceColor && trajectory.getInitialPose().getX() > 8.27) {
+        if (useAllianceColor && trajectory.getInitialPose(false).getX() > 8.27) {
             DriverStation.reportWarning(
                 "You have constructed a path following command that will automatically transform path states depending" +
                 " on the alliance color, however, it appears this path was created on the red side of the field" +
@@ -120,7 +120,7 @@ public class ChoreoSwerveControllerCommand extends Command {
 
         addRequirements(requirements);
 
-        if (useAllianceColor && trajectory.getInitialPose().getX() > 8.27) {
+        if (useAllianceColor && trajectory.getInitialPose(false).getX() > 8.27) {
             DriverStation.reportWarning(
                 "You have constructed a path following command that will automatically transform path states depending" +
                 " on the alliance color, however, it appears this path was created on the red side of the field" +

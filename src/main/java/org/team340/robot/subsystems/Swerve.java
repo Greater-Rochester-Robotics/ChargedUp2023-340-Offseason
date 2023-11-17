@@ -95,14 +95,15 @@ public class Swerve extends SwerveBase {
     public Command followTrajectory(String trajFile, boolean resetPose, boolean stopOnEnd) {
         ChoreoTrajectory traj = TrajectoryManager.getInstance().getTrajectory(trajFile + ".json");
         return sequence(
-            resetPose ? runOnce(() -> resetOdometry(traj.getInitialPose())) : none(),
+            resetPose ? runOnce(() -> resetOdometry(traj.getInitialPose(true))) : none(),
             new ChoreoSwerveControllerCommand(
                 traj,
                 this::getPosition,
+                kinematics,
                 new PIDController(SwerveConstants.XY_PID.p(), SwerveConstants.XY_PID.i(), SwerveConstants.XY_PID.d()),
                 new PIDController(SwerveConstants.XY_PID.p(), SwerveConstants.XY_PID.i(), SwerveConstants.XY_PID.d()),
                 new PIDController(SwerveConstants.ROTATION_PID.p(), SwerveConstants.ROTATION_PID.i(), SwerveConstants.ROTATION_PID.d()),
-                speeds -> this.driveSpeeds(speeds, true, false),
+                states -> driveStates(states),
                 true,
                 this
             ),

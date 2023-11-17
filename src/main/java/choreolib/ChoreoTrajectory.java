@@ -1,6 +1,8 @@
 package choreolib;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -57,8 +59,10 @@ public class ChoreoTrajectory {
         return mirrorForRedAlliance ? state.flipped() : state;
     }
 
-    public Pose2d getInitialPose() {
-        return states.get(0).getPose();
+    public Pose2d getInitialPose(boolean flip) {
+        ChoreoTrajectoryState state = states.get(0);
+        if (flip && DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) state = state.flipped();
+        return state.getPose();
     }
 
     public Pose2d getFinalPose() {
