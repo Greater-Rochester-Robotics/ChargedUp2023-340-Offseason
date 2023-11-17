@@ -40,6 +40,7 @@ public final class Constants {
 
         public static final double DRIVE_ROT_EXP = 2.0;
         public static final double DRIVE_ROT_MULTIPLIER = 0.45;
+        public static final double DRIVE_ROT_MULTIPLIER_MODIFIED = 0.9;
     }
 
     /**
@@ -114,7 +115,7 @@ public final class Constants {
 
         public static final class Positions {
 
-            public static final Arm.Position INTAKE = new Arm.Position(.435, 0.61);
+            public static final Arm.Position INTAKE = new Arm.Position(.435, 0.63);
             public static final Arm.Position SAFE = new Arm.Position(.435, 3.0);
             public static final Arm.Position SHOOT_SLOW = new Arm.Position(.8, 1.65);
             public static final Arm.Position SHOOT_NORMAL = new Arm.Position(.8, 1.65);
@@ -172,7 +173,7 @@ public final class Constants {
             .setRampRate(0.03, 0.03)
             .setPowerProperties(VOLTAGE, 40.0, 30.0)
             .setMechanicalProperties(7.5, 10.0, 4.0)
-            .setSpeedConstraints(5.3, 7.0, 7.0, 25.0)
+            .setSpeedConstraints(5.3, 9.0, 7.0, 25.0)
             .setMotorTypes(SwerveMotorType.SPARK_MAX_BRUSHLESS, SwerveMotorType.SPARK_MAX_BRUSHLESS)
             .setDiscretizationLookahead(0.040)
             .setStandardDeviations(0.1, 0.1, 0.1)

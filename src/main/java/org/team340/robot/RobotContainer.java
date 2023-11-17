@@ -121,6 +121,12 @@ public final class RobotContainer {
      * Gets the rotational drive speed from the driver's controller.
      */
     private static double getDriveRotate() {
-        return driver.getTriggerDifference(ControllerConstants.DRIVE_ROT_MULTIPLIER, ControllerConstants.DRIVE_ROT_EXP);
+        double multiplier =
+            (
+                (driver.getHID().getLeftStickButton())
+                    ? ControllerConstants.DRIVE_ROT_MULTIPLIER_MODIFIED
+                    : ControllerConstants.DRIVE_ROT_MULTIPLIER
+            );
+        return driver.getTriggerDifference(multiplier, ControllerConstants.DRIVE_ROT_EXP);
     }
 }
