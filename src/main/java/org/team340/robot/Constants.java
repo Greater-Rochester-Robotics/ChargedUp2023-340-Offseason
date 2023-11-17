@@ -120,6 +120,7 @@ public final class Constants {
             public static final Arm.Position SHOOT_SLOW = new Arm.Position(.8, 1.65);
             public static final Arm.Position SHOOT_NORMAL = new Arm.Position(.8, 1.65);
             public static final Arm.Position SHOOT_FAST = new Arm.Position(1.0, 1.7);
+            public static final Arm.Position SHOOT_VERY_FAST = new Arm.Position(0.93, 1.7);
         }
     }
 
@@ -131,6 +132,7 @@ public final class Constants {
         public static final double SHOOT_SPEED_SLOW = -0.2;
         public static final double SHOOT_SPEED_NORMAL = -0.35;
         public static final double SHOOT_SPEED_FAST = -0.6;
+        public static final double SHOOT_SPEED_VERY_FAST = -0.8;
         public static final double SHOOT_SPEED_INNER = -1.0;
     }
 

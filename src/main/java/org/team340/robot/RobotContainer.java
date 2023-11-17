@@ -89,6 +89,9 @@ public final class RobotContainer {
         // Y => Shoot fast
         driver.y().onTrue(shootFast()).onFalse(stopShooting());
 
+        // Start => Shoot very fast
+        driver.start().onTrue(shootVeryFast()).onFalse(stopShooting());
+
         // POV Left => Zero swerve
         driver.povLeft().onTrue(swerve.zero(0.0));
 

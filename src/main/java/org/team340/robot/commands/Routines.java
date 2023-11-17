@@ -46,6 +46,14 @@ public class Routines {
         );
     }
 
+    public static Command shootVeryFast() {
+        return sequence(
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_VERY_FAST, IntakeConstants.INNER_HOLD_SPEED),
+            arm.setPosition(Positions.SHOOT_VERY_FAST).withTimeout(1.5),
+            intake.setMotors(IntakeConstants.SHOOT_SPEED_VERY_FAST, IntakeConstants.SHOOT_SPEED_INNER)
+        );
+    }
+
     public static Command stopShooting() {
         return sequence(intake.stopMotors(), arm.setPosition(Positions.SAFE));
     }
