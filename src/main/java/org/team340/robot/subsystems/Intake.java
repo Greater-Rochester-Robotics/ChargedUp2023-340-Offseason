@@ -65,6 +65,8 @@ public class Intake extends GRRSubsystem {
         innerMotor.enableVoltageCompensation(true);
         innerMotor.setInverted(true);
         innerMotor.setNeutralMode(NeutralMode.Brake);
+        innerMotor.configContinuousCurrentLimit(10);
+        innerMotor.configPeakCurrentLimit(15);
 
         cubeLimit = new DigitalInput(Constants.RobotMap.INTAKE_CUBE_LIMIT_DIGITAL_INPUT);
 

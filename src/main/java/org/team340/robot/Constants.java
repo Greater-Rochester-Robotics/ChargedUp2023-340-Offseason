@@ -126,7 +126,7 @@ public final class Constants {
     public static class IntakeConstants {
 
         public static final double OUTER_INTAKE_SPEED = 0.25;
-        public static final double INNER_INTAKE_SPEED = 1.0;
+        public static final double INNER_INTAKE_SPEED = 0.9;
         public static final double INNER_HOLD_SPEED = 0.1;
         public static final double SHOOT_SPEED_LOW = -0.2;
         public static final double SHOOT_SPEED_MID = -0.35;
