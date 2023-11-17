@@ -124,8 +124,11 @@ public class Arm extends GRRSubsystem {
 
     }
 
-    public void setWristBrake(boolean isBrakeMode) {
-        wristMotor.setIdleMode(isBrakeMode ? IdleMode.kBrake : IdleMode.kCoast);
+    public Command setBrakeMode(boolean isBrakeMode) {
+        return runOnce(() -> {
+            armMotor.setIdleMode(isBrakeMode ? IdleMode.kBrake : IdleMode.kCoast);
+            wristMotor.setIdleMode(isBrakeMode ? IdleMode.kBrake : IdleMode.kCoast);
+        });
     }
 
     // arm methods

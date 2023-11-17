@@ -3,6 +3,8 @@ package org.team340.robot;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static org.team340.robot.commands.Routines.*;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.team340.lib.GRRDashboard;
 import org.team340.lib.control.AdvancedController;
 import org.team340.lib.util.RevUtil;
@@ -81,11 +83,19 @@ public final class RobotContainer {
         arm.setDefaultCommand(arm.holdPosition());
         swerve.setDefaultCommand(swerve.drive(RobotContainer::getDriveX, RobotContainer::getDriveY, RobotContainer::getDriveRotate, true));
 
+        // Triggers.
+        new Trigger(DriverStation::isDisabled).onTrue(arm.setBrakeMode(true)).onFalse(arm.setBrakeMode(false));
+
         /**
          * Driver bindings.
          */
         driver.a().onTrue(intake(false)).onFalse(storeCube());
-        driver.b().onTrue(scoreTarget.getDriverCommand()).onFalse(intake.stopMotors());
+        driver
+            .b()
+            .onTrue(
+                sequence(scoreTarget.setLevel(Level.LOW), scoreTarget.getCoDriverCommand().withTimeout(1.5), scoreTarget.getDriverCommand())
+            )
+            .onFalse(sequence(intake.stopMotors(), arm.setPosition(Positions.SAFE)));
         driver
             .x()
             .onTrue(
