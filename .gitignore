@@ -42,6 +42,7 @@
 # Log file
 *.log
 *.wpilog
+/ctre_sim/
 
 # BlueJ files
 *.ctxt
