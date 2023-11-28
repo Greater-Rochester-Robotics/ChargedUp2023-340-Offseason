@@ -8,6 +8,7 @@ import choreolib.TrajectoryManager;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.Supplier;
 import org.team340.lib.math.Math2;
@@ -95,15 +96,24 @@ public class Swerve extends SwerveBase {
     public Command followTrajectory(String trajFile, boolean resetPose, boolean stopOnEnd) {
         ChoreoTrajectory traj = TrajectoryManager.getInstance().getTrajectory(trajFile + ".json");
         return sequence(
-            resetPose ? runOnce(() -> resetOdometry(traj.getInitialPose(true))) : none(),
+            resetPose
+                ? runOnce(() -> {
+                    Pose2d initialPose = traj.getInitialPose(true);
+                    zeroIMU(initialPose.getRotation().getRadians());
+                    resetOdometry(initialPose);
+                })
+                : none(),
             new ChoreoSwerveControllerCommand(
                 traj,
                 this::getPosition,
-                kinematics,
-                new PIDController(SwerveConstants.XY_PID.p(), SwerveConstants.XY_PID.i(), SwerveConstants.XY_PID.d()),
-                new PIDController(SwerveConstants.XY_PID.p(), SwerveConstants.XY_PID.i(), SwerveConstants.XY_PID.d()),
-                new PIDController(SwerveConstants.ROTATION_PID.p(), SwerveConstants.ROTATION_PID.i(), SwerveConstants.ROTATION_PID.d()),
-                states -> driveStates(states),
+                new PIDController(SwerveConstants.AUTO_XY_PID.p(), SwerveConstants.AUTO_XY_PID.i(), SwerveConstants.AUTO_XY_PID.d()),
+                new PIDController(SwerveConstants.AUTO_XY_PID.p(), SwerveConstants.AUTO_XY_PID.i(), SwerveConstants.AUTO_XY_PID.d()),
+                new PIDController(
+                    SwerveConstants.AUTO_ROTATION_PID.p(),
+                    SwerveConstants.AUTO_ROTATION_PID.i(),
+                    SwerveConstants.AUTO_ROTATION_PID.d()
+                ),
+                speeds -> driveSpeeds(speeds, true, false),
                 true,
                 this
             ),

@@ -126,7 +126,8 @@ public final class Constants {
             .addModule(BACK_RIGHT)
             .addModule(FRONT_RIGHT);
 
-        public static final PIDConfig XY_PID = new PIDConfig(7.0, 0.0, 0.5);
+        public static final PIDConfig AUTO_XY_PID = new PIDConfig(1.0, 0.0, 0.0);
+        public static final PIDConfig AUTO_ROTATION_PID = new PIDConfig(1.9, 0.0, 0.0);
         public static final PIDConfig ROTATION_PID = new PIDConfig(7.0, 0.0, 0.5);
         public static final Constraints ROTATION_CONSTRAINTS = new Constraints(6.0, 12.5);
     }
