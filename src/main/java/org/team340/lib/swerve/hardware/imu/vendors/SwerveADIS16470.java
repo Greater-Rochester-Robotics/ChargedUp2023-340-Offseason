@@ -39,6 +39,6 @@ public class SwerveADIS16470 implements SwerveIMU {
     @Override
     public void setZero(double yaw) {
         imu.resetAllAngles();
-        imu.setGyroAngle(imu.getYawAxis(), yaw);
+        imu.setGyroAngle(imu.getYawAxis(), Math.toDegrees(yaw));
     }
 }

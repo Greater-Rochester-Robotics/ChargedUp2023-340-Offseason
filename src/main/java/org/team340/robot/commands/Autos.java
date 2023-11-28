@@ -24,4 +24,8 @@ public class Autos {
     public static Command followTestPath() {
         return swerve.followTrajectory("TestPath", true, true);
     }
+
+    public static Command followFunPath() {
+        return swerve.followTrajectory("FunPath", true, true);
+    }
 }

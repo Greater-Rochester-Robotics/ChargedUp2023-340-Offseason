@@ -262,7 +262,6 @@ public abstract class SwerveBase extends GRRSubsystem {
      */
     protected void zeroIMU(double yaw) {
         imu.setZero(yaw);
-        resetOdometry(new Pose2d(getPosition().getTranslation(), Rotation2d.fromRadians(yaw)));
     }
 
     /**

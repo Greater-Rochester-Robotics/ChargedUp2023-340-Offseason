@@ -59,10 +59,10 @@ public class ChoreoTrajectoryState implements Interpolatable<ChoreoTrajectorySta
             .builder()
             .x(this.x)
             .y(FIELD_LENGTH_METERS - this.y)
-            .heading(Math.PI - this.heading)
-            .velocityX(this.velocityX * -1)
-            .velocityY(this.velocityY)
-            .angularVelocity(this.angularVelocity * -1)
+            .heading(this.heading)
+            .velocityX(this.velocityX)
+            .velocityY(-this.velocityY)
+            .angularVelocity(this.angularVelocity)
             .build();
     }
 }
