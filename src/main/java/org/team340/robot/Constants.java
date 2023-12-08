@@ -131,7 +131,7 @@ public final class Constants {
         public static final double INNER_HOLD_SPEED = 0.1;
         public static final double SHOOT_SPEED_SLOW = -0.2;
         public static final double SHOOT_SPEED_NORMAL = -0.35;
-        public static final double SHOOT_SPEED_FAST = -0.6;
+        public static final double SHOOT_SPEED_FAST = -0.45;
         public static final double SHOOT_SPEED_VERY_FAST = -0.8;
         public static final double SHOOT_SPEED_INNER = -1.0;
     }
