@@ -180,3 +180,5 @@ dashboard/node_modules/
 dashboard/src-tauri/target/
 dashboard/src-tauri/Cargo.lock
 dashboard/package-lock.json
+
+*.dat
